@@ -197,7 +197,7 @@ def reduce_bands(param, classData, Data, i):
     return classData, Data
 
 def evalPerformance(classData, y_predict):
-    n = len(classData)  # Dynamically determine the number of runs
+    n = 3# Dynamically determine the number of runs
     print(f"The model shall evaluate for {n} times")
     oa = np.zeros(n, dtype='float64')
     aa = np.zeros(n, dtype='float64')
