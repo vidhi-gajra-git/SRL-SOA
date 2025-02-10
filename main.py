@@ -1,10 +1,3 @@
-import os
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
-
-import numpy as np
-import tensorflow as tf
-import argparse
-
 import svm
 import utils
 
