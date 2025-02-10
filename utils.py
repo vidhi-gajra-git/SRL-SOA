@@ -111,7 +111,7 @@ def reduce_bands(param, classData, Data, i):
     epochs = param['epochs']
     s_bands = param['s_bands']
     q = param['q']
-    band_indices=None
+    ind_a=None
 
     n_bands = classData['x_train'].shape[-1]
 
@@ -145,7 +145,7 @@ def reduce_bands(param, classData, Data, i):
         A = np.mean(A, axis = 0)
         A = np.sum(A, axis = 0)
         indices = np.argsort(A)
-        band_indices=s_bands
+        ind_a=
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
@@ -192,7 +192,7 @@ def reduce_bands(param, classData, Data, i):
     else: print('Selected method is not supported.')
 
     print('Selected number of bands: ', str(classData['x_train'].shape[-1]))
-    print(f'======Selected band indices ======= \n {band_indices}')
+    print(f'======Selected band indices ======= \n {ind_a}')
 
     return classData, Data
 
