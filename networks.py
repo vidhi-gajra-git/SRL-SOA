@@ -8,7 +8,7 @@ tf.random.set_seed(10)
 # SLR-OL Model
 def SLRol(n_bands, q):
     # Explicitly place the model on the selected GPU
-    with tf.device('//CPU:0'):  # You can use '/device:GPU:1', '/device:GPU:2', etc., as needed
+    with tf.device('/CPU:0'):  # You can use '/device:GPU:1', '/device:GPU:2', etc., as needed
         input = tf.keras.Input((n_bands, 1), name='input')
         x_0 = Oper1D(n_bands, 3, activation='tanh', q=q)(input)
         y = tf.keras.layers.Dot(axes=(1, 1))([x_0, input])
