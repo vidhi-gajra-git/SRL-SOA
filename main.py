@@ -38,9 +38,9 @@ classData, Data = utils.loadData(param['dataset'])
 
 y_predict = []
 n=3
-print("*"*5," METHOD : SVM","*"*5)
+print("*"*10," METHOD : SVM","*"*10)
 # Band selection ...
-print("*"*3,f" #RUNS : {n} ","*"*3)
+print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
 for i in range(0, n): # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
@@ -57,8 +57,8 @@ for i in range(0, n): # 10 runs ...
 
 utils.evalPerformance(classData, y_predict)
 # Comparing with random forest
-print("*"*5," METHOD : Random Forest ","*"*5)
-print("*"*3,f" #RUNS : {n} ","*"*3)
+print("*"*10," METHOD : Random Forest ","*"*10)
+print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
 for i in range(0, n): # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
