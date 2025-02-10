@@ -145,7 +145,7 @@ def reduce_bands(param, classData, Data, i):
         A = np.mean(A, axis = 0)
         A = np.sum(A, axis = 0)
         indices = np.argsort(A)
-        ind_a=
+        ind_a=indices
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
