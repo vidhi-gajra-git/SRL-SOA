@@ -23,4 +23,4 @@ def SLRol(n_bands, q):
 
         model.summary()
 
-    return model
+        return model
