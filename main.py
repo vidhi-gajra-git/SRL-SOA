@@ -47,12 +47,16 @@ if gpus:
 
         # Optionally, you can configure logical devices if needed:
         # e.g., limit GPU to 4GB for each logical device (if using multiple GPUs)
-        for gpu in gpus:
-            tf.config.set_virtual_device_configuration(
-                gpu,
-                [tf.config.LogicalDeviceConfiguration(memory_limit=4096)])  # Limit memory to 4GB for each GPU
+        if len(gpus) > 1:
+            tf.config.set_logical_device_configuration(
+                gpus[0],
+                [tf.config.LogicalDeviceConfiguration(memory_limit=4096),  # 4GB for GPU 0
+                 tf.config.LogicalDeviceConfiguration(memory_limit=4096)])  # 4GB for GPU 1
+            print("Logical devices configured")
+        else:
+            print("Single GPU mode. No need for logical device configuration.")
     except RuntimeError as e:
-        print("Error setting memory growth: ", e)
+        print("Error setting memory growth or configuring logical devices: ", e)
 else:
     print("No GPU found. The code will run on CPU.")
 
