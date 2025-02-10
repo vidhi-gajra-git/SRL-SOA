@@ -11,6 +11,7 @@ import seaborn as sns
 from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
 from tabulate import tabulate  # Install with: pip install tabulate
 import networks
+import ipykernel
 try:
     from BandSelection.classes.SpaBS import SpaBS
     from BandSelection.classes.ISSC import ISSC_HSI
