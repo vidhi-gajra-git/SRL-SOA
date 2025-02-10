@@ -52,4 +52,4 @@ for i in range(0, 10): # 10 runs ...
 
     y_predict.append(class_model.predict(classData[i]['x_test']))
 
-utils.evalPerformance(classData, y_predict
+utils.evalPerformance(classData, y_predict)
