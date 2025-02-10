@@ -39,27 +39,27 @@ os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(gpu_ids)
 os.environ["TF_XLA_FLAGS"] = "--tf_xla_enable_xla_devices=false"
 
 # Set memory growth for each GPU
-gpus = tf.config.list_physical_devices('GPU')
-if gpus:
-    try:
-        # Set memory growth for all GPUs
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
+# gpus = tf.config.list_physical_devices('GPU')
+# if gpus:
+#     try:
+#         # Set memory growth for all GPUs
+#         for gpu in gpus:
+#             tf.config.experimental.set_memory_growth(gpu, True)
 
-        # Optionally, you can configure logical devices if needed:
-        # e.g., limit GPU to 4GB for each logical device (if using multiple GPUs)
-        if len(gpus) > 1:
-            tf.config.set_logical_device_configuration(
-                gpus[0],
-                [tf.config.LogicalDeviceConfiguration(memory_limit=1028*14),  # 4GB for GPU 0
-                 tf.config.LogicalDeviceConfiguration(memory_limit=1028*14)])  # 4GB for GPU 1
-            print("Logical devices configured")
-        else:
-            print("Single GPU mode. No need for logical device configuration.")
-    except RuntimeError as e:
-        print("Error setting memory growth or configuring logical devices: ", e)
-else:
-    print("No GPU found. The code will run on CPU.")
+#         # Optionally, you can configure logical devices if needed:
+#         # e.g., limit GPU to 4GB for each logical device (if using multiple GPUs)
+#         if len(gpus) > 1:
+#             tf.config.set_logical_device_configuration(
+#                 gpus[0],
+#                 [tf.config.LogicalDeviceConfiguration(memory_limit=1028*14),  # 4GB for GPU 0
+#                  tf.config.LogicalDeviceConfiguration(memory_limit=1028*14)])  # 4GB for GPU 1
+#             print("Logical devices configured")
+#         else:
+#             print("Single GPU mode. No need for logical device configuration.")
+#     except RuntimeError as e:
+#         print("Error setting memory growth or configuring logical devices: ", e)
+# else:
+#     print("No GPU found. The code will run on CPU.")
 
 # Load data
 classData, Data = utils.loadData(param['dataset'])
