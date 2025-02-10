@@ -37,9 +37,11 @@ parameterSearch = True # Parameter search for the classifier.
 classData, Data = utils.loadData(param['dataset'])
 
 y_predict = []
-
+n=3
+print("*"*5," METHOD : SVM","*"*5)
 # Band selection ...
-for i in range(0, 3): # 10 runs ...
+print("*"*3,f" #RUNS : {n} ","*"*3)
+for i in range(0, n): # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
@@ -55,8 +57,9 @@ for i in range(0, 3): # 10 runs ...
 
 utils.evalPerformance(classData, y_predict)
 # Comparing with random forest
-
-for i in range(0, 3): # 10 runs ...
+print("*"*5," METHOD : Random Forest ","*"*5)
+print("*"*3,f" #RUNS : {n} ","*"*3)
+for i in range(0, n): # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
