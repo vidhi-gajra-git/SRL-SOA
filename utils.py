@@ -124,7 +124,7 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         # Specify the GPU device explicitly using `tf.device`
-        with tf.device('/GPU:0'):  # Use '/GPU:1' for the second GPU
+        with tf.device('/CPU:0'):  # Use '/GPU:1' for the second GPU
             if weights == 'False':
                 model.fit(xx, xx, batch_size = batchSize,
                         callbacks=callbacks_osen, shuffle=True,
