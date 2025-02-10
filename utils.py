@@ -97,7 +97,7 @@ def loadData(dataset):
 
     print('\n')
     print('Number of bands: ', str(classData['x_train'].shape[-1]))
-    print(f'======Selected band indices ======= \n {}')
+    print(f'======Selected band indices ======= \n {bands_selected}')
 
     return classDataa, Dataa
 
