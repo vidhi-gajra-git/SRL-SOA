@@ -18,7 +18,7 @@ def rf_train_search(X_train, y_train):
                             param_grid, 
                             n_jobs=-1,  # Use all available cores
                             cv=2,       # 2-fold cross-validation
-                            verbose=2)  # Show progress
+                            verbose=0)  # Show progress
 
     print('Random Forest Train...')
     rf_model.fit(X_train, y_train)
