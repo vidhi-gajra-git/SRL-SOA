@@ -36,6 +36,7 @@ parameterSearch = True  # Parameter search for the classifier.
 # Take the GPU IDs from the input argument
 gpu_ids = args['gpus'].split(',')
 os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(gpu_ids)
+os.environ["TF_XLA_FLAGS"] = "--tf_xla_enable_xla_devices=false"
 
 # Set memory growth for each GPU
 gpus = tf.config.list_physical_devices('GPU')
