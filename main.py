@@ -1,4 +1,6 @@
-import os
+mport os
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
+
 import numpy as np
 import tensorflow as tf
 import argparse
@@ -6,68 +8,37 @@ import argparse
 import svm
 import utils
 
-# Set the random seeds for reproducibility
 np.random.seed(10)
 tf.random.set_seed(10)
 
-# Argument parsing
 ap = argparse.ArgumentParser()
-ap.add_argument('--method', default='SRL-SOA', help="SRL-SOA, PCA, SpaBS, EGCSR_R, ISSC, None (for no band selection).")
-ap.add_argument('--dataset', default='Indian_pines_corrected', help="Indian_pines_corrected, SalinasA_corrected.")
-ap.add_argument('--q', default=3, help="Order of the OSEN.")
-ap.add_argument('--weights', default=True, help="Evaluate the model.")
-ap.add_argument('--epochs', default=50, help="Number of epochs.")
-ap.add_argument('--batchSize', default=5, help="Batch size.")
-ap.add_argument('--bands', default=1, help="Compression rate.")
-# ap.add_argument('--gpus', default='0', help="Comma-separated list of GPU IDs to use (e.g., '0,1').")
+ap.add_argument('--method', default='SRL-SOA', help =
+                "SRL-SOA, PCA, SpaBS, EGCSR_R, ISSC, None (for no band selection).")
+ap.add_argument('--dataset', default='Indian_pines_corrected', help = "Indian_pines_corrected, SalinasA_corrected.")
+ap.add_argument('--q', default = 3, help = "Order of the OSEN.")
+ap.add_argument('--weights', default = True, help="Evaluate the model.")
+ap.add_argument('--epochs', default = 50, help="Number of epochs.")
+ap.add_argument('--batchSize', default = 5, help="Batch size.")
+ap.add_argument('--bands', default = 1, help="Compression rate.")
 args = vars(ap.parse_args())
 
 param = {}
 
 param['modelType'] = args['method']
-param['weights'] = args['weights']  # True or False.
-param['q'] = int(args['q'])  # The order of the OSEN.
-param['dataset'] = args['dataset']  # Dataset.
+param['weights'] = args['weights'] # True or False.
+param['q'] = int(args['q']) # The order of the OSEN.
+param['dataset'] = args['dataset'] # Dataset.
 param['epochs'] = int(args['epochs'])
 param['batchSize'] = int(args['batchSize'])
-param['s_bands'] = int(args['bands'])  # Number of bands.
-parameterSearch = True  # Parameter search for the classifier.
+param['s_bands'] = int(args['bands']) # Number of bands.
+parameterSearch = True # Parameter search for the classifier.
 
-# Take the GPU IDs from the input argument
-# gpu_ids = args['gpus'].split(',')
-# os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(gpu_ids)
-# os.environ["TF_XLA_FLAGS"] = "--tf_xla_enable_xla_devices=false"
-
-# Set memory growth for each GPU
-# gpus = tf.config.list_physical_devices('GPU')
-# if gpus:
-#     try:
-#         # Set memory growth for all GPUs
-#         for gpu in gpus:
-#             tf.config.experimental.set_memory_growth(gpu, True)
-
-#         # Optionally, you can configure logical devices if needed:
-#         # e.g., limit GPU to 4GB for each logical device (if using multiple GPUs)
-#         if len(gpus) > 1:
-#             tf.config.set_logical_device_configuration(
-#                 gpus[0],
-#                 [tf.config.LogicalDeviceConfiguration(memory_limit=1028*14),  # 4GB for GPU 0
-#                  tf.config.LogicalDeviceConfiguration(memory_limit=1028*14)])  # 4GB for GPU 1
-#             print("Logical devices configured")
-#         else:
-#             print("Single GPU mode. No need for logical device configuration.")
-#     except RuntimeError as e:
-#         print("Error setting memory growth or configuring logical devices: ", e)
-# else:
-#     print("No GPU found. The code will run on CPU.")
-
-# Load data
 classData, Data = utils.loadData(param['dataset'])
 
 y_predict = []
 
 # Band selection ...
-for i in range(0, 3):  # 10 runs ...
+for i in range(0, 10): # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
@@ -75,11 +46,10 @@ for i in range(0, 3):  # 10 runs ...
     if parameterSearch:
         # If hyper-parameter search is selected.
         best_parameters, class_model = svm.svm_train_search(classData[i]['x_train'], classData[i]['y_train'])
-        print('\nBest parameters:' + str(best_parameters))
+        print('\nBest paramters:' + str(best_parameters))
     else:
         class_model = svm.svm_train(classData[i]['x_train'], classData[i]['y_train'])
 
     y_predict.append(class_model.predict(classData[i]['x_test']))
 
-# Evaluate performance
-utils.evalPerformance(classData, y_predict)
+utils.evalPerformance(classData, y_predict
