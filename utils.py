@@ -18,20 +18,6 @@ except ModuleNotFoundError:
 np.random.seed(10)
 tf.random.set_seed(10)
 
-# Function to check GPU availability
-def check_gpu():
-    gpus = tf.config.experimental.list_physical_devices('GPU')
-    if len(gpus) == 0:
-        print("No GPU available. The model will run on CPU.")
-    else:
-        print(f"GPU(s) found: {gpus}")
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)  # Allow memory growth on GPU
-        # Set the first GPU as visible, you can modify this to select a specific GPU
-        tf.config.set_visible_devices(gpus[0], 'GPU')
-
-check_gpu()  # Call this function to ensure GPUs are visible
-
 def loadData(dataset):
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
     if 'Indian' in dataset: Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
