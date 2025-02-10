@@ -6,8 +6,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
 from sklearn.decomposition import PCA
-import networks
 
+import networks
 try:
     from BandSelection.classes.SpaBS import SpaBS
     from BandSelection.classes.ISSC import ISSC_HSI
@@ -17,20 +17,6 @@ except ModuleNotFoundError:
 
 np.random.seed(10)
 tf.random.set_seed(10)
-
-# Check if GPU is available and set memory growth if available
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-if physical_devices:
-    try:
-        tf.config.experimental.set_memory_growth(physical_devices[0], True)
-        print("Memory growth set.")
-    except RuntimeError as e:
-        print(e)
-else:
-    print("No GPU found. Training will run on CPU.")
-
-# CUDA device selection (if GPU is available)
-device_name = '/GPU:0' if tf.config.list_physical_devices('GPU') else '/CPU:0'
 
 def loadData(dataset):
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
@@ -83,6 +69,7 @@ def loadData(dataset):
         del x_train, x_test, y_train, y_test
 
         # Image data.
+
         sc = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
 
         sc = scaler.transform(sc)
@@ -99,9 +86,11 @@ def loadData(dataset):
         Dataa.append(Data)
 
     print('\nScene: ', sc.shape)
+
     print('\nClassification:')
     print('Training samples: ', len(classData['x_train']))
     print('Test samples: ', len(classData['x_test']))
+
     print('\n')
     print('Number of bands: ', str(classData['x_train'].shape[-1]))
 
@@ -115,6 +104,7 @@ def reduce_bands(param, classData, Data, i):
     batchSize = param['batchSize']
     epochs = param['epochs']
     s_bands = param['s_bands']
+    q = param['q']
 
     n_bands = classData['x_train'].shape[-1]
 
@@ -133,25 +123,24 @@ def reduce_bands(param, classData, Data, i):
 
         callbacks_osen = [checkpoint_osen]
 
-        with tf.device(device_name):  # Explicitly move training to GPU or CPU
-            if weights == 'False':
-                model.fit(xx, xx, batch_size=batchSize,
-                        callbacks=callbacks_osen, shuffle=True,
-                        validation_data=(xx, xx), epochs=epochs)
-                print(modelType + ' is trained!')
-            model.load_weights(weightName)
+        if weights == 'False':
+            model.fit(xx, xx, batch_size = batchSize,
+                    callbacks=callbacks_osen, shuffle=True,
+                    validation_data=(xx, xx), epochs = epochs)
+            print(modelType + ' is trained!')
+        model.load_weights(weightName)
 
-            intermediate_layer_model = tf.keras.Model(inputs = model.input,
-                                            outputs = model.layers[1].output)
-            A = intermediate_layer_model(classData['x_train'])
+        intermediate_layer_model = tf.keras.Model(inputs = model.input,
+                                        outputs = model.layers[1].output)
+        A = intermediate_layer_model(classData['x_train'])
 
-            A = np.abs(A)
-            A = np.mean(A, axis = 0)
-            A = np.sum(A, axis = 0)
-            indices = np.argsort(A)
+        A = np.abs(A)
+        A = np.mean(A, axis = 0)
+        A = np.sum(A, axis = 0)
+        indices = np.argsort(A)
 
-            classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
-            classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
+        classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
+        classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
     elif modelType == 'PCA':
         pca = PCA(n_components = s_bands, random_state = 1)
@@ -221,37 +210,3 @@ def evalPerformance(classData, y_predict):
     print('Overall accuracy: ', np.mean(oa))
     print('Average accuracy: ', np.mean(aa))
     print('Kappa coefficient: ', np.mean(kappa))
-
-# Assuming your training is done using the following:
-# Adjust your training parameters here
-param = {
-    'modelType': 'SRL-SOA',  # Example
-    'dataset': 'Indian_pines_corrected',
-    'q': 10,
-    'weights': 'False',
-    'batchSize': 32,
-    'epochs': 10,
-    's_bands': 10
-}
-
-# Load data and preprocess
-classDataa, Dataa = loadData('Indian_pines_corrected')
-
-# Reduce bands (if needed) based on selected model
-classData, Data = reduce_bands(param, classDataa[0], Dataa[0], 0)
-
-# Model training
-model = networks.SLRol(n_bands=classData['x_train'].shape[-1], q=param['q'])
-
-# Train the model (this will automatically use the GPU if available)
-with tf.device(device_name):  # Explicitly move training to GPU or CPU
-    model.fit(classData['x_train'], classData['x_train'], 
-              batch_size=param['batchSize'], 
-              epochs=param['epochs'], 
-              validation_data=(classData['x_test'], classData['x_test']))
-
-# Evaluation (replace this with your model prediction logic)
-y_predict = model.predict(classData['x_test'])
-
-# Evaluate the performance of the model
-evalPerformance(classDataa, y_predict)
