@@ -18,6 +18,20 @@ except ModuleNotFoundError:
 np.random.seed(10)
 tf.random.set_seed(10)
 
+# Function to check GPU availability
+def check_gpu():
+    gpus = tf.config.experimental.list_physical_devices('GPU')
+    if len(gpus) == 0:
+        print("No GPU available. The model will run on CPU.")
+    else:
+        print(f"GPU(s) found: {gpus}")
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)  # Allow memory growth on GPU
+        # Set the first GPU as visible, you can modify this to select a specific GPU
+        tf.config.set_visible_devices(gpus[0], 'GPU')
+
+check_gpu()  # Call this function to ensure GPUs are visible
+
 def loadData(dataset):
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
     if 'Indian' in dataset: Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
@@ -32,8 +46,8 @@ def loadData(dataset):
         gtd = Gtd['salinasA_gt']
     else: print('The selected dataset is not valid.')
 
-    image = np.array(image, dtype = 'float32')
-    gtd = np.array(gtd, dtype = 'float32')
+    image = np.array(image, dtype='float32')
+    gtd = np.array(gtd, dtype='float32')
 
     xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
 
@@ -109,13 +123,13 @@ def reduce_bands(param, classData, Data, i):
     n_bands = classData['x_train'].shape[-1]
 
     if dataset != 'SalinasA_corrected': xx = classData['x_train']
-    else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
+    else: xx = np.concatenate([classData['x_train'], Data['scd']], axis=0)
 
     if modelType == 'SRL-SOA':
         weightsDir = 'weights/' + dataset + '/'
         if not os.path.exists(weightsDir): os.makedirs(weightsDir)
         weightName = weightsDir + modelType + '_q' + str(q) + '_run' + str(i) + '.weights.h5'
-        model = networks.SLRol(n_bands = n_bands, q = q)
+        model = networks.SLRol(n_bands=n_bands, q=q)
 
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
             weightName, monitor='val_loss', verbose=1,
@@ -124,26 +138,26 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
-            model.fit(xx, xx, batch_size = batchSize,
+            model.fit(xx, xx, batch_size=batchSize,
                     callbacks=callbacks_osen, shuffle=True,
-                    validation_data=(xx, xx), epochs = epochs)
+                    validation_data=(xx, xx), epochs=epochs)
             print(modelType + ' is trained!')
         model.load_weights(weightName)
 
-        intermediate_layer_model = tf.keras.Model(inputs = model.input,
-                                        outputs = model.layers[1].output)
+        intermediate_layer_model = tf.keras.Model(inputs=model.input,
+                                                  outputs=model.layers[1].output)
         A = intermediate_layer_model(classData['x_train'])
 
         A = np.abs(A)
-        A = np.mean(A, axis = 0)
-        A = np.sum(A, axis = 0)
+        A = np.mean(A, axis=0)
+        A = np.sum(A, axis=0)
         indices = np.argsort(A)
 
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
     elif modelType == 'PCA':
-        pca = PCA(n_components = s_bands, random_state = 1)
+        pca = PCA(n_components=s_bands, random_state=1)
         pca.fit(xx)
         classData['x_train'] = pca.transform(classData['x_train'])
         classData['x_test'] = pca.transform(classData['x_test'])
@@ -189,10 +203,9 @@ def reduce_bands(param, classData, Data, i):
     return classData, Data
 
 def evalPerformance(classData, y_predict):
-
-    oa = np.zeros((10, ), dtype = 'float64')
-    aa = np.zeros((10, ), dtype = 'float64')
-    kappa = np.zeros((10, ), dtype = 'float64')
+    oa = np.zeros((10,), dtype='float64')
+    aa = np.zeros((10,), dtype='float64')
+    kappa = np.zeros((10,), dtype='float64')
     for i in range(0, 10):
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
