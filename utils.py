@@ -87,6 +87,7 @@ def loadData(dataset):
 
     print('\nScene: ', sc.shape)
 
+    
     print('\nClassification:')
     print('Training samples: ', len(classData['x_train']))
     print('Test samples: ', len(classData['x_test']))
