@@ -97,7 +97,7 @@ def loadData(dataset):
 
     print('\n')
     print('Number of bands: ', str(classData['x_train'].shape[-1]))
-    print(f'======Selected band indices ======= \n {bands_indices}')
+    
 
     return classDataa, Dataa
 
@@ -191,6 +191,7 @@ def reduce_bands(param, classData, Data, i):
     else: print('Selected method is not supported.')
 
     print('Selected number of bands: ', str(classData['x_train'].shape[-1]))
+    print(f'======Selected band indices ======= \n {bands_indices}')
 
     return classData, Data
 
