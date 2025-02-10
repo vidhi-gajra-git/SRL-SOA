@@ -50,8 +50,8 @@ if gpus:
         if len(gpus) > 1:
             tf.config.set_logical_device_configuration(
                 gpus[0],
-                [tf.config.LogicalDeviceConfiguration(memory_limit=4096),  # 4GB for GPU 0
-                 tf.config.LogicalDeviceConfiguration(memory_limit=4096)])  # 4GB for GPU 1
+                [tf.config.LogicalDeviceConfiguration(memory_limit=1028*14),  # 4GB for GPU 0
+                 tf.config.LogicalDeviceConfiguration(memory_limit=1028*14)])  # 4GB for GPU 1
             print("Logical devices configured")
         else:
             print("Single GPU mode. No need for logical device configuration.")
