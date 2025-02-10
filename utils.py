@@ -190,11 +190,11 @@ def reduce_bands(param, classData, Data, i):
     return classData, Data
 
 def evalPerformance(classData, y_predict):
-
-    oa = np.zeros((10, ), dtype = 'float64')
-    aa = np.zeros((10, ), dtype = 'float64')
-    kappa = np.zeros((10, ), dtype = 'float64')
-    for i in range(0, 10):
+    n=3
+    oa = np.zeros((n, ), dtype = 'float64')
+    aa = np.zeros((n, ), dtype = 'float64')
+    kappa = np.zeros((n, ), dtype = 'float64')
+    for i in range(0, n):
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
         print('\nConfusion Matrix: \n', cm)
@@ -207,7 +207,7 @@ def evalPerformance(classData, y_predict):
         print('Average accuracy: ', aa[i])
         print('Kappa coefficient: ', kappa[i])
 
-    print('\nAverage performance metrics over 10 runs:')
+    print(f'\nAverage performance metrics over {n} runs:')
     print('Overall accuracy: ', np.mean(oa))
     print('Average accuracy: ', np.mean(aa))
     print('Kappa coefficient: ', np.mean(kappa))
