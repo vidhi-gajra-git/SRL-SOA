@@ -6,6 +6,7 @@ import tensorflow as tf
 import argparse
 
 import svm
+import rf
 import utils
 
 np.random.seed(10)
@@ -49,6 +50,23 @@ for i in range(0, 3): # 10 runs ...
         print('\nBest paramters:' + str(best_parameters))
     else:
         class_model = svm.svm_train(classData[i]['x_train'], classData[i]['y_train'])
+
+    y_predict.append(class_model.predict(classData[i]['x_test']))
+
+utils.evalPerformance(classData, y_predict)
+# Comparing with random forest
+
+for i in range(0, 3): # 10 runs ...
+    if param['modelType'] != 'None':
+        classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
+
+    print('Classification...')
+    if parameterSearch:
+        # If hyper-parameter search is selected.
+        best_parameters, class_model = rf.rf_train_search(classData[i]['x_train'], classData[i]['y_train'])
+        print('\nBest paramters:' + str(best_parameters))
+    else:
+        class_model = rf.rf_train(classData[i]['x_train'], classData[i]['y_train'])
 
     y_predict.append(class_model.predict(classData[i]['x_test']))
 
