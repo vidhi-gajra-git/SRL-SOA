@@ -6,23 +6,9 @@ import argparse
 import svm
 import utils
 
-# Set the GPU device explicitly (optional)
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Choose GPU 0, change to another number for different GPUs
-
+# Set the random seeds for reproducibility
 np.random.seed(10)
 tf.random.set_seed(10)
-
-# Enable memory growth for GPUs if running out of memory
-gpus = tf.config.list_physical_devices('GPU')
-if gpus:
-    try:
-        # Currently only one GPU available, make sure TensorFlow uses it efficiently
-        tf.config.set_logical_device_configuration(gpus[0], [tf.config.LogicalDeviceConfiguration(memory_limit=4096)])  # Limit memory to 4GB
-        tf.config.experimental.set_memory_growth(gpus[0], True)
-    except RuntimeError as e:
-        print("Error setting memory growth: ", e)
-else:
-    print("No GPU found. The code will run on CPU.")
 
 # Argument parsing
 ap = argparse.ArgumentParser()
@@ -33,6 +19,7 @@ ap.add_argument('--weights', default=True, help="Evaluate the model.")
 ap.add_argument('--epochs', default=50, help="Number of epochs.")
 ap.add_argument('--batchSize', default=5, help="Batch size.")
 ap.add_argument('--bands', default=1, help="Compression rate.")
+ap.add_argument('--gpus', default='0', help="Comma-separated list of GPU IDs to use (e.g., '0,1').")
 args = vars(ap.parse_args())
 
 param = {}
@@ -46,13 +33,36 @@ param['batchSize'] = int(args['batchSize'])
 param['s_bands'] = int(args['bands'])  # Number of bands.
 parameterSearch = True  # Parameter search for the classifier.
 
+# Take the GPU IDs from the input argument
+gpu_ids = args['gpus'].split(',')
+os.environ["CUDA_VISIBLE_DEVICES"] = ','.join(gpu_ids)
+
+# Set memory growth for each GPU
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    try:
+        # Set memory growth for all GPUs
+        for gpu in gpus:
+            tf.config.experimental.set_memory_growth(gpu, True)
+
+        # Optionally, you can configure logical devices if needed:
+        # e.g., limit GPU to 4GB for each logical device (if using multiple GPUs)
+        for gpu in gpus:
+            tf.config.set_virtual_device_configuration(
+                gpu,
+                [tf.config.LogicalDeviceConfiguration(memory_limit=4096)])  # Limit memory to 4GB for each GPU
+    except RuntimeError as e:
+        print("Error setting memory growth: ", e)
+else:
+    print("No GPU found. The code will run on CPU.")
+
 # Load data
 classData, Data = utils.loadData(param['dataset'])
 
 y_predict = []
 
 # Band selection ...
-for i in range(0, 3):  # 10 runs ...
+for i in range(0, 10):  # 10 runs ...
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
