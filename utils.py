@@ -6,7 +6,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
 from sklearn.decomposition import PCA
-
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
+from tabulate import tabulate  # Install with: pip install tabulate
 import networks
 try:
     from BandSelection.classes.SpaBS import SpaBS
@@ -94,6 +97,7 @@ def loadData(dataset):
 
     print('\n')
     print('Number of bands: ', str(classData['x_train'].shape[-1]))
+    print(f'======Selected band indices ======= \n {}')
 
     return classDataa, Dataa
 
@@ -106,6 +110,7 @@ def reduce_bands(param, classData, Data, i):
     epochs = param['epochs']
     s_bands = param['s_bands']
     q = param['q']
+    band_indices=None
 
     n_bands = classData['x_train'].shape[-1]
 
@@ -139,7 +144,7 @@ def reduce_bands(param, classData, Data, i):
         A = np.mean(A, axis = 0)
         A = np.sum(A, axis = 0)
         indices = np.argsort(A)
-
+        band_indices=s_bands
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
@@ -155,7 +160,7 @@ def reduce_bands(param, classData, Data, i):
 
         a = xx[0, :]
         b = x_temp[0, :]
-        _, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
+        band_indices, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
 
         classData['x_train'] = classData['x_train'][:, ind_a]
         classData['x_test'] = classData['x_test'][:, ind_a]
@@ -166,7 +171,7 @@ def reduce_bands(param, classData, Data, i):
 
         a = xx[0, :]
         b = x_temp[0, :]
-        _, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
+        band_indices, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
 
         classData['x_train'] = classData['x_train'][:, ind_a]
         classData['x_test'] = classData['x_test'][:, ind_a]
@@ -178,7 +183,7 @@ def reduce_bands(param, classData, Data, i):
 
         a = xx[0, :]
         b = x_temp[0, :]
-        _, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
+        band_indices, ind_a, ind_b = np.intersect1d(a, b, return_indices=True)
 
         classData['x_train'] = classData['x_train'][:, ind_a]
         classData['x_test'] = classData['x_test'][:, ind_a]
@@ -190,24 +195,67 @@ def reduce_bands(param, classData, Data, i):
     return classData, Data
 
 def evalPerformance(classData, y_predict):
-    n=3
-    oa = np.zeros((n, ), dtype = 'float64')
-    aa = np.zeros((n, ), dtype = 'float64')
-    kappa = np.zeros((n, ), dtype = 'float64')
-    for i in range(0, n):
+    n = len(classData)  # Dynamically determine the number of runs
+    print(f"The model shall evaluate for {n} times")
+    oa = np.zeros(n, dtype='float64')
+    aa = np.zeros(n, dtype='float64')
+    kappa = np.zeros(n, dtype='float64')
+
+    results = []
+
+    for i in range(n):
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
-        print('\nConfusion Matrix: \n', cm)
-        
+
         oa[i] = np.sum(y_test == y_predict[i]) / len(y_predict[i])
         aa[i] = balanced_accuracy_score(y_test, y_predict[i])
         kappa[i] = cohen_kappa_score(y_test, y_predict[i])
 
-        print('Overall accuracy: ', oa[i])
-        print('Average accuracy: ', aa[i])
-        print('Kappa coefficient: ', kappa[i])
+        results.append([i + 1, oa[i], aa[i], kappa[i]])
 
-    print(f'\nAverage performance metrics over {n} runs:')
-    print('Overall accuracy: ', np.mean(oa))
-    print('Average accuracy: ', np.mean(aa))
-    print('Kappa coefficient: ', np.mean(kappa))
+        # Print Confusion Matrix in Table Format
+        print(f"\nConfusion Matrix for Run {i+1}:")
+        cm_table = tabulate(cm, tablefmt="fancy_grid")
+        print(cm_table)
+
+        # Plot Confusion Matrix as Heatmap
+        plt.figure(figsize=(6, 5))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        plt.title(f"Confusion Matrix - Run {i+1}")
+        plt.show()
+
+    # Print Overall Accuracy, Average Accuracy, and Kappa Scores in Table Format
+    headers = ["Run", "Overall Accuracy", "Average Accuracy", "Kappa Coefficient"]
+    print("\n" + tabulate(results, headers=headers, tablefmt="pretty"))
+
+    # Print average performance metrics
+    avg_oa = np.mean(oa)
+    avg_aa = np.mean(aa)
+    avg_kappa = np.mean(kappa)
+    print(f"\nAverage Performance Over {n} Runs:")
+    print(f"Overall Accuracy: {avg_oa:.4f}")
+    print(f"Average Accuracy: {avg_aa:.4f}")
+    print(f"Kappa Coefficient: {avg_kappa:.4f}")
+
+    # Visualization: Plot different accuracy metrics across runs
+    sns.set_style("whitegrid")
+    plt.figure(figsize=(8, 5))
+    
+    x_labels = [f"Run {i+1}" for i in range(n)]
+    width = 0.2  # Bar width
+
+    plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
+    plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
+    plt.bar(np.arange(n) + 2*width, kappa, width=width, label="Kappa Coefficient", color="red")
+
+    plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
+    plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
+    plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1, label="Avg Kappa")
+
+    plt.xticks(np.arange(n) + width, x_labels)
+    plt.ylabel("Score")
+    plt.title("Performance Metrics Across Runs")
+    plt.legend()
+    plt.show()
