@@ -29,7 +29,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         self.layer_norm = tf.keras.layers.LayerNormalization(axis=-1)
         
         # Dropout
-        self.dropout = tf.keras.layers.Dropout(0.5)
+        self.dropout = tf.keras.layers.Dropout(0.2)
 
         # 1x1 convolution layer to combine multi-scale features back to 'filters' channels.
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
