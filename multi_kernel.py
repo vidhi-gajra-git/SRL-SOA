@@ -1,3 +1,5 @@
+import tensorflow as tf
+
 class Oper1DMultiScaleCombined(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation=None, q=1):
         """
