@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kap
 from tabulate import tabulate  # Install with: pip install tabulate
 import networks
 import ipykernel
+from IPython.display import display
 try:
     from BandSelection.classes.SpaBS import SpaBS
     from BandSelection.classes.ISSC import ISSC_HSI
@@ -197,13 +198,16 @@ def reduce_bands(param, classData, Data, i):
     return classData, Data
 
 def evalPerformance(classData, y_predict):
-    n = 3# Dynamically determine the number of runs
+    n = 3  # Number of runs
     print(f"The model shall evaluate for {n} times")
+
+    # Initialize arrays for storing accuracy scores
     oa = np.zeros(n, dtype='float64')
     aa = np.zeros(n, dtype='float64')
     kappa = np.zeros(n, dtype='float64')
 
     results = []
+    confusion_matrices = []  # Store confusion matrices for CSV
 
     for i in range(n):
         y_test = classData[i]['y_test']
@@ -215,24 +219,50 @@ def evalPerformance(classData, y_predict):
 
         results.append([i + 1, oa[i], aa[i], kappa[i]])
 
-        # Print Confusion Matrix in Table Format
+        # Convert Confusion Matrix to Pandas DataFrame
+        labels = sorted(set(y_test))  # Get unique class labels
+        cm_df = pd.DataFrame(cm, index=labels, columns=labels)
+
         print(f"\nConfusion Matrix for Run {i+1}:")
-        cm_table = tabulate(cm, tablefmt="fancy_grid")
-        print(cm_table)
+        display(cm_df)  # Use display() for Jupyter Notebook
+
+        confusion_matrices.append(cm_df)  # Store for CSV output
 
         # Plot Confusion Matrix as Heatmap
         plt.figure(figsize=(6, 5))
-        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar=False)
+        sns.heatmap(cm_df, annot=True, fmt="d", cmap="Blues", cbar=False)
         plt.xlabel("Predicted Label")
         plt.ylabel("True Label")
         plt.title(f"Confusion Matrix - Run {i+1}")
-        plt.show()
+        display(plt.gcf())  # Display figure explicitly
+        plt.close()  # Close figure to prevent memory issues
 
-    # Print Overall Accuracy, Average Accuracy, and Kappa Scores in Table Format
-    headers = ["Run", "Overall Accuracy", "Average Accuracy", "Kappa Coefficient"]
-    print("\n" + tabulate(results, headers=headers, tablefmt="pretty"))
+    # Convert results to Pandas DataFrame
+    df_results = pd.DataFrame(results, columns=["Run", "Overall Accuracy", "Average Accuracy", "Kappa Coefficient"])
 
-    # Print average performance metrics
+    # Save results to the "results" folder
+    results_folder = "results"
+    os.makedirs(results_folder, exist_ok=True)
+
+    # Save accuracy results
+    csv_path = os.path.join(results_folder, "performance_results.csv")
+    df_results.to_csv(csv_path, index=False)
+    print(f"\nPerformance results saved to: {csv_path}")
+
+    # Save confusion matrices
+    cm_csv_path = os.path.join(results_folder, "confusion_matrices.csv")
+    with open(cm_csv_path, "w") as f:
+        for i, cm_df in enumerate(confusion_matrices):
+            f.write(f"Confusion Matrix - Run {i+1}\n")
+            cm_df.to_csv(f)
+            f.write("\n")  # Add a newline between matrices
+    print(f"Confusion matrices saved to: {cm_csv_path}")
+
+    # Print Results Table
+    print("\nPerformance Metrics Summary:")
+    display(df_results)  # Use display() to properly render the table
+
+    # Compute average performance metrics
     avg_oa = np.mean(oa)
     avg_aa = np.mean(aa)
     avg_kappa = np.mean(kappa)
@@ -244,13 +274,13 @@ def evalPerformance(classData, y_predict):
     # Visualization: Plot different accuracy metrics across runs
     sns.set_style("whitegrid")
     plt.figure(figsize=(8, 5))
-    
+
     x_labels = [f"Run {i+1}" for i in range(n)]
     width = 0.2  # Bar width
 
     plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
     plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
-    plt.bar(np.arange(n) + 2*width, kappa, width=width, label="Kappa Coefficient", color="red")
+    plt.bar(np.arange(n) + 2 * width, kappa, width=width, label="Kappa Coefficient", color="red")
 
     plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
     plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
@@ -260,4 +290,6 @@ def evalPerformance(classData, y_predict):
     plt.ylabel("Score")
     plt.title("Performance Metrics Across Runs")
     plt.legend()
-    plt.show()
+    
+    display(plt.gcf())  # Explicitly display the figure
+    plt.close()  # Close the figure to prevent file access issues
