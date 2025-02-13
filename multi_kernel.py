@@ -46,12 +46,3 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         
         return x
 
-# Adjust the learning rate
-optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
-model.compile(optimizer=optimizer, loss='mse', metrics=['accuracy'])
-
-# Add early stopping
-early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
-
-# Fit model
-history = model.fit(train_data, train_labels, validation_data=(val_data, val_labels), epochs=100, callbacks=[early_stopping])
