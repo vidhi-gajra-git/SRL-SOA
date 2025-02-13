@@ -152,12 +152,13 @@ def reduce_bands(param, classData, Data, i):
         csv_file_path = "results/selected_bands.csv"
         
         # Check if the file exists
-        if os.path.exists(csv_file_path):
-            # Append to the existing CSV file
-            df_bands.to_csv(csv_file_path, mode='a', header=False, index=False)
-        else:
-            # Create a new CSV file with a header
-            df_bands.to_csv(csv_file_path, mode='w', header=True, index=False)
+        band_presence = []
+        all_bands=[i for i in range len(indices)]
+        for band in all_bands:
+            band_presence.append(1 if band in ind_a else 0)
+    
+    # Create a DataFrame for the selected bands and their presence
+        df_bands = pd.DataFrame([band_presence], columns=all_bands)
 
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
