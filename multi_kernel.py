@@ -21,7 +21,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None, kernel_regularizer=tf.keras.regularizers.l2(0.01), kernel_initializer=tf.keras.initializers.HeNormal())
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None,  kernel_initializer=tf.keras.initializers.HeNormal())
                 )
             self.all_layers[k_size] = layers_for_scale
         
