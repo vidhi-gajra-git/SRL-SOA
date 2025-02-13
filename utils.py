@@ -147,6 +147,17 @@ def reduce_bands(param, classData, Data, i):
         A = np.sum(A, axis = 0)
         indices = np.argsort(A)
         ind_a=indices[-s_bands::]
+        df_bands = pd.DataFrame(ind_a, columns=["Selected_Bands"])
+        csv_file_path = "results/selected_bands.csv"
+        
+        # Check if the file exists
+        if os.path.exists(csv_file_path):
+            # Append to the existing CSV file
+            df_bands.to_csv(csv_file_path, mode='a', header=False, index=False)
+        else:
+            # Create a new CSV file with a header
+            df_bands.to_csv(csv_file_path, mode='w', header=True, index=False)
+
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
