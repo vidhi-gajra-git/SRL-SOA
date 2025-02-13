@@ -263,11 +263,19 @@ def evalPerformance(classData, y_predict):
 
     # Save confusion matrices
     cm_csv_path = os.path.join(results_folder, "confusion_matrices.csv")
-    with open(cm_csv_path, "w") as f:
-        for i, cm_df in enumerate(confusion_matrices):
-            f.write(f"Confusion Matrix - Run {i+1}\n")
-            cm_df.to_csv(f)
-            f.write("\n")  # Add a newline between matrices
+    if os.path.exists(cm_csv_path):
+        with open(cm_csv_path, "a") as f:
+            for i, cm_df in enumerate(confusion_matrices):
+                f.write(f"Confusion Matrix - Run {i+1}\n")
+                cm_df.to_csv(f)
+                f.write("\n")  # Add a newline between matrices
+    else :
+        with open(cm_csv_path, "w") as f:
+            for i, cm_df in enumerate(confusion_matrices):
+                f.write(f"Confusion Matrix - Run {i+1}\n")
+                cm_df.to_csv(f)
+                f.write("\n")
+        
     print(f"Confusion matrices saved to: {cm_csv_path}")
 
     # Print Results Table
