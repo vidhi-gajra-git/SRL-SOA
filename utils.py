@@ -153,7 +153,7 @@ def reduce_bands(param, classData, Data, i):
         
         # Check if the file exists
         band_presence = []
-        all_bands=[i for i in range len(indices)]
+        all_bands=[i for i in range (len(indices))]
         for band in all_bands:
             band_presence.append(1 if band in ind_a else 0)
     
