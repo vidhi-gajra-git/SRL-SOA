@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kap
 from tabulate import tabulate  # Install with: pip install tabulate
 import networks
 import ipykernel
+import pandas as pd
 from IPython.display import display
 try:
     from BandSelection.classes.SpaBS import SpaBS
