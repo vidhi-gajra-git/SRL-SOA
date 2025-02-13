@@ -57,6 +57,8 @@ for i in range(0, n): # 10 runs ...
 
 utils.evalPerformance(classData, y_predict)
 classData, Data = utils.loadData(param['dataset'])
+
+y_predict = []
 # Comparing with random forest
 print("*"*10," METHOD : Random Forest ","*"*10)
 print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
