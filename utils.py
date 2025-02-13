@@ -257,7 +257,7 @@ def evalPerformance(classData, y_predict):
     os.makedirs(results_folder, exist_ok=True)
 
     # Save accuracy results
-    csv_path = os.path.join(results_folder, "performance_results.csv")
+    csv_path = os.path.join(results_folder, f"performance_results{i}.csv")
     df_results.to_csv(csv_path, index=False)
     print(f"\nPerformance results saved to: {csv_path}")
 
