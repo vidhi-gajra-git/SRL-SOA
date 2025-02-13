@@ -1,4 +1,5 @@
 import tensorflow as tf
+
 class Oper1DMultiScaleCombined(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
         """
@@ -24,10 +25,10 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
                 )
             self.all_layers[k_size] = layers_for_scale
         
-        # Batch Normalization
-        self.bn = tf.keras.layers.BatchNormalization()
+        # Layer Normalization instead of BatchNormalization
+        self.layer_norm = tf.keras.layers.LayerNormalization(axis=-1)  # Normalize across features axis.
         
-        # Dropout
+        # Dropout (if needed)
         # self.dropout = tf.keras.layers.Dropout(0.5)
 
         # 1x1 convolution layer to combine multi-scale features back to 'filters' channels.
@@ -42,14 +43,14 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         # Process input with each scale.
         for k_size in self.kernel_sizes:
             layers_for_scale = self.all_layers[k_size]
-            x_scale = self.bn(layers_for_scale[0](input_tensor))
+            x_scale = self.layer_norm(layers_for_scale[0](input_tensor))
             if self.q > 1:
                 for i in range(1, self.q):
-                    x_scale += self.bn(layers_for_scale[i](tf.math.pow(input_tensor, i + 1)))
+                    x_scale += self.layer_norm(layers_for_scale[i](tf.math.pow(input_tensor, i + 1)))
             # x_scale = self.dropout(x_scale)
             multi_scale_outputs.append(x_scale)
         
-        # Concatenate outputs along channel dimension.
+        # Concatenate outputs along the channel dimension.
         x = tf.concat(multi_scale_outputs, axis=-1)  # Shape: [B, L, filters * num_scales]
         
         # Use a 1x1 convolution to reduce the number of channels.
