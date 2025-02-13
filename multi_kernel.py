@@ -21,15 +21,15 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None, kernel_regularizer=tf.keras.regularizers.l2(0.01))
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None, kernel_regularizer=tf.keras.regularizers.l2(0.01), kernel_initializer=tf.keras.initializers.HeNormal())
                 )
             self.all_layers[k_size] = layers_for_scale
         
-        # Layer Normalization instead of BatchNormalization
-        self.layer_norm = tf.keras.layers.LayerNormalization(axis=-1)  # Normalize across features axis.
+        # Layer Normalization
+        self.layer_norm = tf.keras.layers.LayerNormalization(axis=-1)
         
-        # Dropout (if needed)
-        # self.dropout = tf.keras.layers.Dropout(0.5)
+        # Dropout
+        self.dropout = tf.keras.layers.Dropout(0.5)
 
         # 1x1 convolution layer to combine multi-scale features back to 'filters' channels.
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
@@ -47,7 +47,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             if self.q > 1:
                 for i in range(1, self.q):
                     x_scale += self.layer_norm(layers_for_scale[i](tf.math.pow(input_tensor, i + 1)))
-            # x_scale = self.dropout(x_scale)
+            x_scale = self.dropout(x_scale)  # Add dropout here
             multi_scale_outputs.append(x_scale)
         
         # Concatenate outputs along the channel dimension.
