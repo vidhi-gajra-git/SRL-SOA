@@ -134,10 +134,11 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
+            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
             model.fit(xx, xx, batch_size = batchSize,
                     callbacks= [early_stopping], shuffle=True,
                     validation_data=(xx, xx), epochs = epochs)
-            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+            
 
         # history = model.fit(train_data, train_labels, validation_data=(val_data, val_labels), epochs=100, callbacks=[early_stopping])
         #     print(modelType + ' is trained!')
