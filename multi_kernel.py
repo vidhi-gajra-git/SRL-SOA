@@ -1,7 +1,5 @@
-import tensorflow as tf
-
 class Oper1DMultiScaleCombined(tf.keras.Model):
-    def __init__(self, filters, kernel_sizes, activation=None, q=1):
+    def __init__(self, filters, kernel_sizes, activation='relu', q=1):
         """
         Parameters:
           - filters: Number of filters for each Conv1D per scale.
@@ -21,10 +19,16 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None)
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None, kernel_regularizer=tf.keras.regularizers.l2(0.01))
                 )
             self.all_layers[k_size] = layers_for_scale
         
+        # Batch Normalization
+        self.bn = tf.keras.layers.BatchNormalization()
+        
+        # Dropout
+        self.dropout = tf.keras.layers.Dropout(0.5)
+
         # 1x1 convolution layer to combine multi-scale features back to 'filters' channels.
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
     
@@ -37,10 +41,11 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         # Process input with each scale.
         for k_size in self.kernel_sizes:
             layers_for_scale = self.all_layers[k_size]
-            x_scale = layers_for_scale[0](input_tensor)
+            x_scale = self.bn(layers_for_scale[0](input_tensor))
             if self.q > 1:
                 for i in range(1, self.q):
-                    x_scale += layers_for_scale[i](tf.math.pow(input_tensor, i + 1))
+                    x_scale += self.bn(layers_for_scale[i](tf.math.pow(input_tensor, i + 1)))
+            x_scale = self.dropout(x_scale)
             multi_scale_outputs.append(x_scale)
         
         # Concatenate outputs along channel dimension.
@@ -55,8 +60,5 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         
         # Apply diagonal constraint (if needed).
         x = tf.vectorized_map(fn=diag_zero, elems=x)
-        
-        # Apply L1 regularization.
-        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x)
         
         return x
