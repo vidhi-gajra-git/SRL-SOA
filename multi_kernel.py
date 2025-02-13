@@ -28,7 +28,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         self.bn = tf.keras.layers.BatchNormalization()
         
         # Dropout
-        self.dropout = tf.keras.layers.Dropout(0.5)
+        # self.dropout = tf.keras.layers.Dropout(0.5)
 
         # 1x1 convolution layer to combine multi-scale features back to 'filters' channels.
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
@@ -46,7 +46,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             if self.q > 1:
                 for i in range(1, self.q):
                     x_scale += self.bn(layers_for_scale[i](tf.math.pow(input_tensor, i + 1)))
-            x_scale = self.dropout(x_scale)
+            # x_scale = self.dropout(x_scale)
             multi_scale_outputs.append(x_scale)
         
         # Concatenate outputs along channel dimension.
