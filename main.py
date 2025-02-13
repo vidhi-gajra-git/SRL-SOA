@@ -37,7 +37,7 @@ parameterSearch = True # Parameter search for the classifier.
 classData, Data = utils.loadData(param['dataset'])
 
 y_predict = []
-n=3
+n=6
 print("*"*10," METHOD : SVM","*"*10)
 # Band selection ...
 print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
@@ -58,22 +58,6 @@ for i in range(0, n): # 10 runs ...
 utils.evalPerformance(classData, y_predict)
 classData, Data = utils.loadData(param['dataset'])
 
-y_predict = []
+
 # Comparing with random forest
-print("*"*10," METHOD : Random Forest ","*"*10)
-print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
-for i in range(0, n): # 10 runs ...
-    if param['modelType'] != 'None':
-        classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
-    print('Classification...')
-    if parameterSearch:
-        # If hyper-parameter search is selected.
-        best_parameters, class_model = rf.rf_train_search(classData[i]['x_train'], classData[i]['y_train'])
-        print('\nBest paramters:' + str(best_parameters))
-    else:
-        class_model = rf.rf_train(classData[i]['x_train'], classData[i]['y_train'])
-
-    y_predict.append(class_model.predict(classData[i]['x_test']))
-
-utils.evalPerformance(classData, y_predict)
