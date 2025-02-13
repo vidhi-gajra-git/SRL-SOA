@@ -129,20 +129,14 @@ def reduce_bands(param, classData, Data, i):
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
             weightName, monitor='val_loss', verbose=1,
             save_best_only=True, mode='min', save_weights_only=True)
-        
 
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
-            early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
             model.fit(xx, xx, batch_size = batchSize,
-                    callbacks= [early_stopping], shuffle=True,
+                    callbacks=callbacks_osen, shuffle=True,
                     validation_data=(xx, xx), epochs = epochs)
-            
-
-        # history = model.fit(train_data, train_labels, validation_data=(val_data, val_labels), epochs=100, callbacks=[early_stopping])
-        #     print(modelType + ' is trained!')
-        model.load_weights(weightName)
+            print(modelType + ' is trained!')
 
         intermediate_layer_model = tf.keras.Model(inputs = model.input,
                                         outputs = model.layers[1].output)
