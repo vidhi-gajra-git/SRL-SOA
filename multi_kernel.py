@@ -17,8 +17,8 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
                 )
             self.all_layers[k_size] = layers_for_scale
         
-        # Layer Normalization Removed (or replaced if needed)
-        self.dropout = tf.keras.layers.Dropout(0.5)
+        # Dropout and BatchNormalization removed (or replaced if needed)
+        self.dropout = tf.keras.layers.Dropout(0.2)
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
 
     @tf.function
@@ -33,7 +33,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             if self.q > 1:
                 for i in range(1, self.q):
                     x_scale += layers_for_scale[i](tf.math.pow(input_tensor, i + 1))
-            x_scale = self.dropout(x_scale)  # Apply Dropout here
+            x_scale = self.dropout(x_scale)
             multi_scale_outputs.append(x_scale)
         
         x = tf.concat(multi_scale_outputs, axis=-1)
@@ -45,3 +45,13 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         x = tf.vectorized_map(fn=diag_zero, elems=x)
         
         return x
+
+# Adjust the learning rate
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-4)
+model.compile(optimizer=optimizer, loss='mse', metrics=['accuracy'])
+
+# Add early stopping
+early_stopping = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=10, restore_best_weights=True)
+
+# Fit model
+history = model.fit(train_data, train_labels, validation_data=(val_data, val_labels), epochs=100, callbacks=[early_stopping])
