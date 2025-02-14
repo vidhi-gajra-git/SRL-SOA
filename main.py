@@ -42,6 +42,8 @@ print("*"*10," METHOD : SVM","*"*10)
 # Band selection ...
 print("\t"*5,"*"*5,f" #RUNS : {n} ","*"*5)
 for i in range(0, 3): # 10 runs ...
+    
+
     if param['modelType'] != 'None':
         classData[i], Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
@@ -67,6 +69,7 @@ for i in range(3, 6): # 10 runs ...
         class_model = svm.svm_train(classData[i]['x_train'], classData[i]['y_train'])
 
     y_predict.append(class_model.predict(classData[i]['x_test']))
+utils.evalPerformance(classData, y_predict)
 
 utils.evalPerformance(classData, y_predict)
 # classData, Data = utils.loadData(param['dataset'])
