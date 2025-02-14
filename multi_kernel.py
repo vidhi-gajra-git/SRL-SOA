@@ -11,7 +11,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         self.kernel_sizes = kernel_sizes
         self.lambda_=0.001
         self.all_layers = {}
-         def sparse_regularizer( activation_matrix):
+        def sparse_regularizer( activation_matrix):
             p = 0.01
             beta = 3
             p_hat = K.mean(activation_matrix) 
