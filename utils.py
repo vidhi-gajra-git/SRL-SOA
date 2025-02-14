@@ -209,8 +209,8 @@ def reduce_bands(param, classData, Data, i):
 
     return classData, Data
 
-def evalPerformance(classData, y_predict):
-    n = 6 # Number of runs
+def evalPerformance(classData, y_predict,n):
+     # Number of runs
     print(f"The model shall evaluate for {n} times")
 
     # Initialize arrays for storing accuracy scores
