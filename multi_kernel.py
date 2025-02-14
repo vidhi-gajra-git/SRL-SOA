@@ -11,22 +11,13 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         self.kernel_sizes = kernel_sizes
         self.lambda_=0.001
         self.all_layers = {}
-        def sparse_regularizer( activation_matrix):
-            p = 0.01
-            beta = 3
-            p_hat = K.mean(activation_matrix) 
-          
-            KL_divergence = p*(K.log(p/p_hat)) + (1-p)*(K.log(1-p/1-p_hat))
-            
-            sum = K.sum(KL_divergence) 
-           
-            return beta * sum
+       
 
         for k_size in kernel_sizes:
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='sigmoid', activity_regularizer=sparse_regularizer,kernel_regularizer=regularizers.l2(self.lambda_/2))
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='sigmoid', kernel_regularizer=regularizers.l2(self.lambda_/2))
                 )
             
                 # kernel_regularizer=regularizers.l2(lambda_/2),activity_regularizer=sparse_regularizer
