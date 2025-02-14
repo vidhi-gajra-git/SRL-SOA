@@ -25,7 +25,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         
         # Dropout and BatchNormalization removed (or replaced if needed)
         # self.dropout = tf.keras.layers.Dropout(0.2)
-        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
+        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='relu)
    
     @tf.function
     def call(self, input_tensor, training=False):
