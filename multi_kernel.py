@@ -1,4 +1,6 @@
 import tensorflow as tf
+from tensorflow.keras import backend as K
+from tensorflow.keras import regularizers
 
 class Oper1DMultiScaleCombined(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
@@ -7,19 +9,31 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
         self.activation = activation
         self.q = q
         self.kernel_sizes = kernel_sizes
-
+        self.lambda_=0.001
         self.all_layers = {}
         for k_size in kernel_sizes:
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None, kernel_regularizer=tf.keras.regularizers.l2(0.01))
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='sigmoid', activity_regularizer=self.sparse_regularizer,kernel_regularizer=regularizers.l2(lambda_/2))
                 )
+            
+                # kernel_regularizer=regularizers.l2(lambda_/2),activity_regularizer=sparse_regularizer
             self.all_layers[k_size] = layers_for_scale
         
         # Dropout and BatchNormalization removed (or replaced if needed)
         # self.dropout = tf.keras.layers.Dropout(0.2)
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
+    def sparse_regularizer(self, activation_matrix):
+        p = 0.01
+        beta = 3
+        p_hat = K.mean(activation_matrix) 
+      
+        KL_divergence = p*(K.log(p/p_hat)) + (1-p)*(K.log(1-p/1-p_hat))
+        
+        sum = K.sum(KL_divergence) 
+       
+        return beta * sum
 
     @tf.function
     def call(self, input_tensor, training=False):
