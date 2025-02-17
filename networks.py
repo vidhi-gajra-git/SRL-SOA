@@ -3,7 +3,7 @@ import numpy as np
 
 from layers import Oper1D
 from multi_kernel import Oper1DMultiScaleCombined
-from multi_layer import Oper1DMultiScaleCombined
+from multi_layer import Oper1DMultiScaleCombined2
 np.random.seed(10)
 tf.random.set_seed(10)
 
