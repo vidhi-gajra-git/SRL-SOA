@@ -10,7 +10,7 @@ tf.random.set_seed(10)
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
   # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  x_0 =Oper1DMultiScaleCombined(n_bands, [3,3], activation = 'tanh', q = q)(input)
+  x_0 =Oper1DMultiScaleCombined(n_bands, [3,7,9], activation = 'tanh', q = q)(input)
   
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
@@ -20,7 +20,7 @@ def SLRol(n_bands, q):
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
   # Adjust the learning rate
   optimizer = tf.keras.optimizers.SGD(learning_rate=1e-3)
-  model.compile(optimizer=optimizer, loss='mse')
+  model.compile(optimizer=optimizer, loss='mae')
 
 # Add early stopping
   
