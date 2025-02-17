@@ -25,7 +25,7 @@ class Oper1DMultiScaleDeep(tf.keras.Model):
             for i in range(q):
                 layers_for_scale.append(
                     tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='relu',
-                                             kernel_regularizer=regularizers.l2(self.lambda_))
+                                             )
                 )
             self.all_layers[k_size] = layers_for_scale
         
