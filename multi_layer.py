@@ -46,7 +46,7 @@ class Oper1DMultiScaleCombined2(tf.keras.Model):
     def call(self, input_tensor):
         # Apply 1D Attention first
         attention_out = self.attention(input_tensor)
-        print(f"!!!!!!!SHAPE OF ATTENTION OUT IS {self.atttention_out.shape}!!!!!!!!!!!!!!!!!!!")
+        print(f"!!!!!!!SHAPE OF ATTENTION OUT IS {atttention_out.shape}!!!!!!!!!!!!!!!!!!!")
 
         multi_scale_outputs = []
         for k_size in self.kernel_sizes:
