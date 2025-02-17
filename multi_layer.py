@@ -21,7 +21,7 @@ class Attention1D(tf.keras.layers.Layer):
 
 class Oper1DMultiScaleCombined2(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
-        super(Oper1DMultiScaleCombined, self).__init__()
+        super(Oper1DMultiScaleCombined2, self).__init__()
         self.filters = filters
         self.kernel_sizes = kernel_sizes
         self.q = q
