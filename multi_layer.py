@@ -68,7 +68,8 @@ class Oper1DMultiScaleDeep(tf.keras.Model):
             x = eval('tf.nn.' + self.activation + '(x)')
         
         x = tf.vectorized_map(fn=diag_zero, elems=x)
-        
+        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
         # Final projection if needed
         x = self.final_projection(x)
+        
         return x
