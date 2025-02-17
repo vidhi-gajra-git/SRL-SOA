@@ -24,7 +24,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             self.all_layers[k_size] = layers_for_scale
         
         # Dropout and BatchNormalization removed (or replaced if needed)
-        self.dropout = tf.keras.layers.Dropout(0.6)
+        # self.dropout = tf.keras.layers.Dropout(0.1)
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='relu')
    
     @tf.function
@@ -39,17 +39,19 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             if self.q > 1:
                 for i in range(1, self.q):
                     x_scale += layers_for_scale[i](tf.math.pow(input_tensor, i + 1))
-            x_scale = self.dropout(x_scale)
+            # x_scale = self.dropout(x_scale)
             multi_scale_outputs.append(x_scale)
         
         x = tf.concat(multi_scale_outputs, axis=-1)
+        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
+        
         x = self.combine_layer(x)
         
         if self.activation is not None:
             x = eval('tf.nn.' + self.activation + '(x)')
         
         x = tf.vectorized_map(fn=diag_zero, elems=x)
-        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
+        # x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
         
         return x
 
