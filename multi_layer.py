@@ -17,7 +17,7 @@ class Attention1D(tf.keras.layers.Layer):
         attention_weights = self.softmax(tf.matmul(Q, K, transpose_b=True) / tf.sqrt(float(self.filters)))
         output = tf.matmul(attention_weights, V)  # Shape: [batch, length, filters]
 
-        return output + inputs  # Residual connection
+        return output # Residual connection
 
 class Oper1DMultiScaleCombined2(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
@@ -46,6 +46,7 @@ class Oper1DMultiScaleCombined2(tf.keras.Model):
     def call(self, input_tensor):
         # Apply 1D Attention first
         attention_out = self.attention(input_tensor)
+        print(f"!!!!!!!SHAPE OF ATTENTION OUT IS {atttention_out.shape}!!!!!!!!!!!!!!!!!!!")
 
         multi_scale_outputs = []
         for k_size in self.kernel_sizes:
