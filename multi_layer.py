@@ -19,7 +19,7 @@ class Attention1D(tf.keras.layers.Layer):
 
         return output + inputs  # Residual connection
 
-class Oper1DMultiScaleCombined(tf.keras.Model):
+class Oper1DMultiScaleCombined2(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
         super(Oper1DMultiScaleCombined, self).__init__()
         self.filters = filters
