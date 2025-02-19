@@ -10,7 +10,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
         self.kernel_sizes = kernel_sizes
         self.lambda_ = 0.001
         self.all_layers = {}
-
+        self.alpha=0.01
         # Multi-scale Conv1D layers
         for k_size in kernel_sizes:
             layers_for_scale = []
@@ -53,7 +53,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
         x = self.attention_layer([x, x])  # Query = Key = Value
 
         # Sparsity Regularization
-        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x)
+        x = tf.keras.layers.ActivityRegularization(l1=0.001)(x)
 
         # Combine and apply activation
         x = self.combine_layer(x)
