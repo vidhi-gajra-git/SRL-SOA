@@ -5,13 +5,15 @@ import numpy as np
 from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
+from self_onn import SelfONN1D
 np.random.seed(10)
 tf.random.set_seed(10)
 
 ### SLR-OL
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
-  x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+  # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+  x_0=SelfONN1D(filters=filters, kernel_size=kernel_size, q=q_order)
   # x_0 =Oper1DDilated(n_bands, dilation_rates=[1, 2, 4], activation = 'tanh', q = q)(input)
   # x_0 = SparseAutoencoderWithAttention(n_bands, [3,5,9], activation = 'tanh', q = q)(input)
   
