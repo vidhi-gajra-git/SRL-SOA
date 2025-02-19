@@ -51,6 +51,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
 
         # Sparsity Regularization
         # x = self.sparse_reg(x)
+        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
 
         # Combine and apply activation
         x = self.combine_layer(x)
