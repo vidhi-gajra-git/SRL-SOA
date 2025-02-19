@@ -28,7 +28,7 @@ def SLRol(n_bands, q):
   model = tf.keras.models.Model(input, y, name='OSEN')
  
 
-#   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   model.compile(optimizer=optimizer,loss='mse')
