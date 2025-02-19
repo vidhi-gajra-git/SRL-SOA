@@ -13,6 +13,10 @@ tf.random.set_seed(10)
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
   x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+ 
+  # q = 3    # Degree of non-linearity
+  num_conv_layers = 2  # Number of Conv1D layers per degree
+  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)
   # x_0=SelfONN1D(filters=n_bands, kernel_size=5,q=q)
   # x_0 =Oper1DDilated(n_bands, dilation_rates=[1, 2, 4], activation = 'tanh', q = q)(input)
   # x_0 = SparseAutoencoderWithAttention(n_bands, [3,5,9], activation = 'tanh', q = q)(input)
@@ -21,6 +25,7 @@ def SLRol(n_bands, q):
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
 
   model = tf.keras.models.Model(input, y, name='OSEN')
+ 
 
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
   # Adjust the learning rate
