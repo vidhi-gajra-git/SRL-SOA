@@ -24,10 +24,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
         self.attention_layer = tf.keras.layers.Attention()
 
         # Final combining layer
-        self.combine_layer = tf.keras.Sequential([
-            tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='sigmoid'),
-            tf.keras.layers.LeakyReLU(alpha=self.alpha)  # LeakyReLU for the final layer
-        ])
+        self.combine_layer =tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='sigmoid'),
 
         # Activity Regularization for Sparsity
         # self.sparse_reg = tf.keras.layers.ActivityRegularization(l1=0.01)
