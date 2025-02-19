@@ -57,7 +57,7 @@ class SelfONN1D(Model):
         # Final Output Layer
         # x = self.output_layer(x)
         print(f"Final shape of x is {x.shape}")
-        return x
+        return x_q
 
 # # Model Instantiation
 # filters = 32
