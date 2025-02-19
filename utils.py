@@ -58,10 +58,10 @@ def loadData(dataset):
 
         if dataset == 'Indian_pines_corrected':
             x_train, x_test, y_train, y_test = train_test_split(x_class, y_class,
-            test_size = 0.95, random_state = i + 1)
+            test_size = 0.4, random_state = i + 1)
         else:
             x_train, x_test, y_train, y_test = train_test_split(x_class, y_class,
-            test_size = 0.99, random_state = i + 1)
+            test_size = 0.4, random_state = i + 1)
 
         scaler = StandardScaler().fit(x_train)
         x_train = scaler.transform(x_train)
