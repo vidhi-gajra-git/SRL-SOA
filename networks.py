@@ -11,7 +11,7 @@ tf.random.set_seed(42)
 ### SLR-OL
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
-  x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+  # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
   x_0 =Oper1DDilated(n_bands, 3, activation = 'tanh', q = q)(input)
   # x_0 = SparseAutoencoderWithAttention(n_bands, [3,5,9], activation = 'tanh', q = q)(input)
   
@@ -23,7 +23,7 @@ def SLRol(n_bands, q):
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
   # Adjust the learning rate
   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-  model.compile(optimizer=optimizer,loss=tf.keras.losses.Huber(delta=1.0)))
+  model.compile(optimizer=optimizer,loss=tf.keras.losses.Huber(delta=1.0))
 
 # Add early stopping
   
