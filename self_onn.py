@@ -56,7 +56,7 @@ class SelfONN1D(Model):
 
         # Final Output Layer
         # x = self.output_layer(x)
-        print(f"Final shape of x is {x.shape}")
+        print(f"!!!!!!!!!!!!!!!!!!!!!!!Final shape of x is {x.shape}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
         return x_q
 
 # # Model Instantiation
