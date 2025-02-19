@@ -5,8 +5,8 @@ import numpy as np
 from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
-np.random.seed(42)
-tf.random.set_seed(42)
+np.random.seed(10)
+tf.random.set_seed(10)
 
 ### SLR-OL
 def SLRol(n_bands, q):
