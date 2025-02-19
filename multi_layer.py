@@ -19,12 +19,12 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='none')
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='None')
                 )
             self.all_layers[k_size] = layers_for_scale
         
         # Final combining layer
-        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='none')
+        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='None')
 
         # Activity Regularization for Sparsity
         # self.sparse_reg = tf.keras.layers.ActivityRegularization(l1=0.01)
