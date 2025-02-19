@@ -38,7 +38,7 @@ class Oper1DDilated(tf.keras.Model):
         x = tf.concat(dilated_outputs, axis=-1)
 
         # Regularization
-        x = tf.keras.layers.ActivityRegularization(l1=0.001)(x) 
+        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
 
         # Final Combining Layer
         x = self.combine_layer(x)
