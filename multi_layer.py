@@ -1,37 +1,17 @@
 import tensorflow as tf
+from tensorflow.keras import regularizers
 
-class Attention1D(tf.keras.layers.Layer):
-    def __init__(self, filters):
-        super(Attention1D, self).__init__()
-        self.filters = filters
-        self.query = tf.keras.layers.Conv1D(filters, kernel_size=1, activation=None)
-        self.key = tf.keras.layers.Conv1D(filters, kernel_size=1, activation=None)
-        self.value = tf.keras.layers.Conv1D(filters, kernel_size=1, activation=None)
-        self.softmax = tf.keras.layers.Softmax(axis=1)
-
-    def call(self, inputs):
-        Q = self.query(inputs)  # Shape: [batch, length, filters]
-        K = self.key(inputs)    # Shape: [batch, length, filters]
-        V = self.value(inputs)  # Shape: [batch, length, filters]
-
-        attention_weights = self.softmax(tf.matmul(Q, K, transpose_b=True) / tf.sqrt(float(self.filters)))
-        output = tf.matmul(attention_weights, V)  # Shape: [batch, length, filters]
-
-        return output # Residual connection
-
-class Oper1DMultiScaleCombined2(tf.keras.Model):
+class SparseAutoencoderWithAttention(tf.keras.Model):
     def __init__(self, filters, kernel_sizes, activation='relu', q=1):
-        super(Oper1DMultiScaleCombined2, self).__init__()
-        self.filters = filters
-        self.kernel_sizes = kernel_sizes
-        self.q = q
+        super(SparseAutoencoderWithAttention, self).__init__(name='SparseAutoencoder')
+        self.diagonal = tf.zeros(filters)
         self.activation = activation
-        
-        # 1D Attention Layer (Added before self-representation layers)
-        self.attention = Attention1D(filters)
-        
-        # Multi-scale convolutional layers
+        self.q = q
+        self.kernel_sizes = kernel_sizes
+        self.lambda_ = 0.001
         self.all_layers = {}
+
+        # Multi-scale Conv1D layers
         for k_size in kernel_sizes:
             layers_for_scale = []
             for i in range(q):
@@ -40,24 +20,45 @@ class Oper1DMultiScaleCombined2(tf.keras.Model):
                 )
             self.all_layers[k_size] = layers_for_scale
         
-        # Self-representation layer
+        # Self-Attention Layer
+        self.attention_layer = tf.keras.layers.Attention()
+
+        # Final combining layer
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='relu')
 
-    def call(self, input_tensor):
-        # Apply 1D Attention first
-        attention_out = self.attention(input_tensor)
-        print(f"!!!!!!!SHAPE OF ATTENTION OUT IS {atttention_out}!!!!!!!!!!!!!!!!!!!")
+        # Activity Regularization for Sparsity
+        self.sparse_reg = tf.keras.layers.ActivityRegularization(l1=0.01)
+   
+    @tf.function
+    def call(self, input_tensor, training=False):
+        def diag_zero(x):
+            return tf.linalg.set_diag(x, self.diagonal)
 
         multi_scale_outputs = []
         for k_size in self.kernel_sizes:
             layers_for_scale = self.all_layers[k_size]
-            x_scale = layers_for_scale[0](attention_out)
+            x_scale = layers_for_scale[0](input_tensor)
             if self.q > 1:
                 for i in range(1, self.q):
-                    x_scale += layers_for_scale[i](tf.math.pow(attention_out, i + 1))
+                    x_scale += layers_for_scale[i](tf.math.pow(input_tensor, i + 1))
             multi_scale_outputs.append(x_scale)
         
+        # Concatenating multi-scale outputs
         x = tf.concat(multi_scale_outputs, axis=-1)
+
+        # Apply Self-Attention
+        x = self.attention_layer([x, x])  # Query = Key = Value
+
+        # Sparsity Regularization
+        x = self.sparse_reg(x)
+
+        # Combine and apply activation
         x = self.combine_layer(x)
+        
+        if self.activation is not None:
+            x = eval('tf.nn.' + self.activation + '(x)')
+        
+        # Diagonal zeroing
+        x = tf.vectorized_map(fn=diag_zero, elems=x)
 
         return x
