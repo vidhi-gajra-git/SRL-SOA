@@ -41,6 +41,11 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         
         # Apply L1 regularization in the final layer
         x = self.final_layer(x)
+        if self.activation is not None:
+              x = eval('tf.nn.' + self.activation + '(x)')
+
+        x = tf.vectorized_map(fn=diag_zero, elems = x) # Diagonal constraint.
+
         
         return x
 
