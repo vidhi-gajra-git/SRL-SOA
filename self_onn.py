@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, regularizers
 
 class SparseAutoencoderNonLinear(tf.keras.Model):
-    def __init__(self, n, q, num_conv_layers=2, activation='relu', lambda_l1=0.001):
+    def __init__(self, n, q, num_conv_layers=2, activation='relu', lambda_l1=0.01):
         super(SparseAutoencoderNonLinear, self).__init__(name='SparseAutoencoderNonLinear')
         self.n = n
         self.q = q
