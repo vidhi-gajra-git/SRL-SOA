@@ -42,7 +42,7 @@ class SelfONN1D(Model):
 
         # Apply non-linear transformations with q-order terms
         x_q = x
-        for i in range(2, self.q + 1):
+        for i in range(0, self.q + 1):
             x_q += tf.math.pow(x, i)
 
         x_q = self.conv2(x_q)
@@ -56,7 +56,7 @@ class SelfONN1D(Model):
 
         # Final Output Layer
         # x = self.output_layer(x)
-        print(f"!!!!!!!!!!!!!!!!!!!!!!!Final shape of x is {x.shape}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
+        # print(f"!!!!!!!!!!!!!!!!!!!!!!!Final shape of x is {x.shape}!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1")
         return x_q
 
 # # Model Instantiation
