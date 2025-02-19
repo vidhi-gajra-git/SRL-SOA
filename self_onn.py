@@ -24,7 +24,9 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
 
     def call(self, inputs):
         multi_scale_outputs = []
-        
+        def diag_zero(input):
+          x_0 = tf.linalg.set_diag(input, self.diagonal)
+          return x_0
         # Apply different non-linear transformations with multiple Conv1D layers
         for degree, conv_list in self.conv_layers.items():
             x_transformed = tf.math.pow(inputs, degree)  # Apply non-linearity (x^degree)
@@ -34,6 +36,8 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         
         # Sum all transformed outputs
         x = tf.add_n(multi_scale_outputs)
+        
+
         
         # Apply L1 regularization in the final layer
         x = self.final_layer(x)
