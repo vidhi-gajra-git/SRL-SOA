@@ -45,7 +45,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
               x = eval('tf.nn.' + self.activation + '(x)')
 
         x = tf.vectorized_map(fn=diag_zero, elems = x) # Diagonal constraint.
-        print(f"!!!!!!!!!!!!!!!!!!!Shape is {x.shape}!!!!!!!!!!!!!!!")
+        # print(f"!!!!!!!!!!!!!!!!!!!Shape is {x.shape}!!!!!!!!!!!!!!!")
         
         return x
 
