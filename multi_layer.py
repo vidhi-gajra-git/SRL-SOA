@@ -27,7 +27,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
         self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='relu')
 
         # Activity Regularization for Sparsity
-        self.sparse_reg = tf.keras.layers.ActivityRegularization(l1=0.01)
+        # self.sparse_reg = tf.keras.layers.ActivityRegularization(l1=0.01)
    
     @tf.function
     def call(self, input_tensor, training=False):
@@ -50,7 +50,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
         x = tf.concat(multi_scale_outputs, axis=-1)
 
         # Sparsity Regularization
-        x = self.sparse_reg(x)
+        # x = self.sparse_reg(x)
 
         # Combine and apply activation
         x = self.combine_layer(x)
