@@ -9,7 +9,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         self.lambda_l1 = lambda_l1
         self.num_conv_layers = num_conv_layers
         self.activation=activation
-        self.diagonal = tf.zeros(filters)
+        self.diagonal = tf.zeros(n)
         # Dictionary to hold multiple Conv1D layers for different powers
         self.conv_layers = {}
         for degree in range(1, q + 1):  # Powers from x^1 to x^q
