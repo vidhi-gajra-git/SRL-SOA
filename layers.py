@@ -26,8 +26,9 @@ class Oper1D(tf.keras.Model):
     
     x = self.all_layers[0](input_tensor)  # First convolutional layer.
 
-    if self.q > 1:
-      for i in range(1, self.q):
+    if self.q > 1:  
+      
+      for i in range(0, self.q):
         x += self.all_layers[i](tf.math.pow(input_tensor, i + 1))
     
     if self.activation is not None:
