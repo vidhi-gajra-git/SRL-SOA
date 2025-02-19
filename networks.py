@@ -23,23 +23,23 @@ def SLRol(n_bands, q):
   # x_0 = SparseAutoencoderWithAttention(n_bands, [3,5,9], activation = 'tanh', q = q)(input)
   
   # testing the model on multi-scale conv .... and comparing the o/p 
-#   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
+  y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
 
-#   model = tf.keras.models.Model(input, y, name='OSEN')
+  model = tf.keras.models.Model(input, y, name='OSEN')
  
 
 #   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-#   model.compile(optimizer=optimizer,loss='mse')
+  model.compile(optimizer=optimizer,loss='mse')
 
 # # Add early stopping
   
 
 
 
-#   # model.compile(optimizer = optimizer, loss = 'mse')
+  # model.compile(optimizer = optimizer, loss = 'mse')
 
-#   model.summary()
+  model.summary()
     
-  return None 
+  return model
