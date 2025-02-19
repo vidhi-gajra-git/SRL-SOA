@@ -3,7 +3,7 @@ import numpy as np
 
 from layers import Oper1D
 from multi_kernel import Oper1DMultiScaleCombined
-from multi_layer import Oper1DMultiScaleCombined2
+from multi_layer import SparseAutoencoderWithAttention
 np.random.seed(10)
 tf.random.set_seed(10)
 
@@ -12,7 +12,7 @@ def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
   # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
   # x_0 =Oper1DMultiScaleCombined(n_bands, [3,7,9], activation = 'tanh', q = q)(input)
-  x_0 =Oper1DMultiScaleCombined2(n_bands, [3,3], activation = 'tanh', q = q)(input)
+  x_0 = SparseAutoencoderWithAttention(n_bands, [3,3], activation = 'tanh', q = q)(input)
   
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
