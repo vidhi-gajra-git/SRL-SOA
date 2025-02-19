@@ -5,7 +5,7 @@ import numpy as np
 from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
-from self_onn import SelfONN1D
+from self_onn import SparseAutoencoderNonLinear
 np.random.seed(10)
 tf.random.set_seed(10)
 
