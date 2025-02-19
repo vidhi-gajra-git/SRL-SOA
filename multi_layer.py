@@ -16,7 +16,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
             layers_for_scale = []
             for i in range(q):
                 layers_for_scale.append(
-                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation=None)
+                    tf.keras.layers.Conv1D(filters, k_size, padding='same', activation='sigmoid')
                 )
             self.all_layers[k_size] = layers_for_scale
         
@@ -25,7 +25,7 @@ class SparseAutoencoderWithAttention(tf.keras.Model):
 
         # Final combining layer
         self.combine_layer = tf.keras.Sequential([
-            tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None),
+            tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='sigmoid'),
             tf.keras.layers.LeakyReLU(alpha=self.alpha)  # LeakyReLU for the final layer
         ])
 
