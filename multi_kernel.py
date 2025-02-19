@@ -22,7 +22,7 @@ class Oper1DDilated(tf.keras.Model):
             )
 
         # Final Combining Layer
-        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation='relu')
+        self.combine_layer = tf.keras.layers.Conv1D(filters, kernel_size=1, padding='same', activation=None)
 
     @tf.function
     def call(self, input_tensor, training=False):
