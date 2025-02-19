@@ -30,7 +30,7 @@ def SLRol(n_bands, q):
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
   # Adjust the learning rate
   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-  model.compile(optimizer=optimizer,loss=tf.keras.losses.Huber(delta=1.0))
+  model.compile(optimizer=optimizer,loss='mse')
 
 # Add early stopping
   
