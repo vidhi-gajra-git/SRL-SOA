@@ -43,7 +43,7 @@ class Oper1DMultiScaleCombined(tf.keras.Model):
             multi_scale_outputs.append(x_scale)
         
         x = tf.concat(multi_scale_outputs, axis=-1)
-        x = tf.keras.layers.ActivityRegularization(l1=0.01)(x) 
+        x = tf.keras.layers.ActivityRegularization(l1=0.001)(x) 
         
         x = self.combine_layer(x)
         
