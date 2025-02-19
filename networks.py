@@ -13,7 +13,7 @@ tf.random.set_seed(10)
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
   # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  x_0=SelfONN1D(filters=filters, kernel_size=kernel_size, q=q_order)
+  x_0=SelfONN1D(filters=n_bands, kernel_size=5,q_order=q)
   # x_0 =Oper1DDilated(n_bands, dilation_rates=[1, 2, 4], activation = 'tanh', q = q)(input)
   # x_0 = SparseAutoencoderWithAttention(n_bands, [3,5,9], activation = 'tanh', q = q)(input)
   
