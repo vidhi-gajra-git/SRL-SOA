@@ -269,6 +269,7 @@ def evalPerformance(classData, y_predict,n):
     oa = np.zeros(n, dtype='float64')
     aa = np.zeros(n, dtype='float64')
     kappa = np.zeros(n, dtype='float64')
+    run_id=None
     # Read the saved run ID from the training script
     with open("run_id.txt", "r") as f:
         run_id = f.read().strip()
