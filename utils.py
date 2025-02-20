@@ -26,8 +26,8 @@ try:
 except ModuleNotFoundError:
     pass
 matplotlib.use('Agg')
-np.random.seed(10)
-tf.random.set_seed(10)
+np.random.seed(42)
+tf.random.set_seed(42)
 # Connect MLflow to DagsHub
 dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 # dagshub.auth.add_credentials(
