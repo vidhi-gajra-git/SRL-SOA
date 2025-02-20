@@ -149,7 +149,7 @@ def reduce_bands(param, classData, Data, i):
 
         if weights == 'False':
             mlflow.tensorflow.autolog()
-
+            run_name = f"{modelType}_run{i}"
             with mlflow.start_run():
                 model_json = model.to_json()
                 with open("model_architecture.json", "w") as json_file:
@@ -252,11 +252,15 @@ def evalPerformance(classData, y_predict,n):
     oa = np.zeros(n, dtype='float64')
     aa = np.zeros(n, dtype='float64')
     kappa = np.zeros(n, dtype='float64')
+    # Read the saved run ID from the training script
+    with open("run_id.txt", "r") as f:
+        run_id = f.read().strip()
 
     results = []
     confusion_matrices = []  # Store confusion matrices for CSV
-    with mlflow.start_run(nested=True): 
+    
       for i in range(n):
+        with mlflow.start_run(nested=True): 
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
 
