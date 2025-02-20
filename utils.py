@@ -265,7 +265,7 @@ def evalPerformance(classData, y_predict,n):
         kappa[i] = cohen_kappa_score(y_test, y_predict[i])
 
         results.append([i + 1, oa[i], aa[i], kappa[i]])
-        report = classification_report(y_test, y_predict, output_dict=True)
+        report = classification_report(y_test, y_predict[i], output_dict=True)
 
         # Log SVM metrics
         mlflow.log_metric("svm_oa", oa[i])
