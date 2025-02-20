@@ -18,7 +18,7 @@ from IPython.display import display
 import mlflow
 import dagshub
 import matplotlib 
-%matplotlib inline 
+# %matplotlib inline
 try:
     from BandSelection.classes.SpaBS import SpaBS
     from BandSelection.classes.ISSC import ISSC_HSI
