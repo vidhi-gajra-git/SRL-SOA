@@ -289,7 +289,7 @@ def evalPerformance(classData, y_predict,n):
         report = classification_report(y_test, y_predict[i], output_dict=True)
 
         # Log SVM metrics
-         mlflow.log_metric("svm_oa", oa[i], step=i)
+        mlflow.log_metric("svm_oa", oa[i], step=i)
         mlflow.log_metric("svm_aa", aa[i], step=i)
         mlflow.log_metric("svm_kappa", kappa[i], step=i)
 
@@ -393,9 +393,10 @@ def evalPerformance(classData, y_predict,n):
         plt.title("Performance Metrics Across Runs")
         plt.legend()
         plt.show()
-        plot_path = "plot2.png"
+        plot_path = "performance_metrics.png"
         plt.savefig(plot_path)
+        plt.close()  
     
 
     # display(plt.gcf())  # Explicitly display the figure
-    plt.close()  # Close the figure to prevent file access issues
+  # Close the figure to prevent file access issues
