@@ -10,7 +10,7 @@ class Oper1D(tf.keras.Model):
     self.activation = activation
     self.q = q
     self.all_layers = []
-
+    self.l1=0.01
     for i in range(0, q):  # q convolutional layers.
       self.all_layers.append(tf.keras.layers.Conv1D(filters,
                                                     kernel_size,
