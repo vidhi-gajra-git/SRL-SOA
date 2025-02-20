@@ -17,6 +17,7 @@ def SLRol(n_bands, q):
   # q = 3    # Degree of non-linearity
   num_conv_layers = 2 # Number of Conv1D layers per degree
   x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
+  model_name='SparseAutoencoderNonLinear'
   # print("!!!!!!!!!!",x_0.shape, "!!!!!!!!!!!!!!!!!!!")
   # x_0=SelfONN1D(filters=n_bands, kernel_size=5,q=q)
   # x_0 =Oper1DDilated(n_bands, dilation_rates=[1, 2, 4], activation = 'tanh', q = q)(input)
@@ -42,4 +43,4 @@ def SLRol(n_bands, q):
 
   model.summary()
     
-  return model
+  return model_name, model
