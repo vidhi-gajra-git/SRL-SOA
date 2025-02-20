@@ -159,7 +159,9 @@ def reduce_bands(param, classData, Data, i):
                 mlflow.log_artifact("model_architecture.json")
             
                 # Log custom hyperparameters
-                mlflow.log_params(vars(model))
+                mlflow.log_params(model.get_hyperparameters())
+
+                
                 # mlflow.log_param("num_conv_layers", num_conv_layers)
                 # mlflow.log_param("activation", activation)
                 # mlflow.log_param("lambda_l1", lambda_l1)
