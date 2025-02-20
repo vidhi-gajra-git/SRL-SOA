@@ -30,7 +30,7 @@ class Oper1D(tf.keras.Model):
 
     if self.q > 1:  
       
-      for i in range(0, self.q):
+      for i in range(1, self.q):
         x += self.all_layers[i](tf.math.pow(input_tensor, i + 1))
     
     if self.activation is not None:
