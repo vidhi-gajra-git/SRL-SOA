@@ -5,11 +5,11 @@ import numpy as np
 import tensorflow as tf
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
+from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score , classification_report
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
+# from sklearn.metrics import confusion_matrix, balanced_accuracy_score, cohen_kappa_score
 from tabulate import tabulate  # Install with: pip install tabulate
 import networks
 import ipykernel
