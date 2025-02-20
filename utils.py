@@ -150,7 +150,10 @@ def reduce_bands(param, classData, Data, i):
         if weights == 'False':
             mlflow.tensorflow.autolog()
             run_name = f"{modelType}_run{i}"
-            with mlflow.start_run():
+            with mlflow.start_run(run_name=run_name) as parent_run:
+                parent_run_id = parent_run.info.run_id
+                with open("run_id.txt", "w") as f:
+                    f.write(parent_run_id)
                 model_json = model.to_json()
                 with open("model_architecture.json", "w") as json_file:
                     json_file.write(model_json)
@@ -193,6 +196,18 @@ def reduce_bands(param, classData, Data, i):
     
     # Create a DataFrame for the selected bands and their presence
         df_bands = pd.DataFrame([band_presence], columns=all_bands)
+        # df_bands.to_csv()
+        if os.path.exists( csv_file_path):
+            with open(cm_csv_path, "a") as f:
+                # for i, cm_df in enumerate(confusion_matrices):
+                    f.write(f"Selected_bands - Run {i+1}\n")
+                    df_bands.to_csv(f)
+                    f.write("\n")  # Add a newline between matrices
+        else :
+            with open( csv_file_path, "w") as f:
+                f.write(f"Selected_bands - Run {i+1}\n")
+                df_bands.to_csv(f)
+                f.write("\n")
 
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
