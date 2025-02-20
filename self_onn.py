@@ -22,7 +22,8 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
             filters=n, kernel_size=1, padding='same', activation=None,  
             kernel_regularizer=regularizers.l1(self.lambda_l1)
         )
-
+    def get_hyperparameters(self):
+        return {k: v for k, v in self.__dict__.items() if isinstance(v, (int, float, str, bool))}
     def call(self, inputs):
         multi_scale_outputs = []
         def diag_zero(input):
