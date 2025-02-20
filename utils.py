@@ -251,8 +251,8 @@ def evalPerformance(classData, y_predict,n):
 
     results = []
     confusion_matrices = []  # Store confusion matrices for CSV
-
-    for i in range(n):
+    with mlflow.start_run(nested=True): 
+      for i in range(n):
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
 
@@ -261,7 +261,17 @@ def evalPerformance(classData, y_predict,n):
         kappa[i] = cohen_kappa_score(y_test, y_predict[i])
 
         results.append([i + 1, oa[i], aa[i], kappa[i]])
+        report = classification_report(y_test, y_pred, output_dict=True)
 
+        # Log SVM metrics
+        mlflow.log_metric("svm_oa", oa[i])
+        mlflow.log_metric("svm_aa", aa[i])
+        mlflow.log_metric("svm_kappa", kappa[i])
+        
+        mlflow.log_dict(report, "svm_classification_report.json")
+
+        # Save the SVM model
+        # mlflow.sklearn.log_model(svm_model, "svm_model")
         # Convert Confusion Matrix to Pandas DataFrame
         labels = sorted(set(y_test))  # Get unique class labels
         cm_df = pd.DataFrame(cm, index=labels, columns=labels)
@@ -277,7 +287,8 @@ def evalPerformance(classData, y_predict,n):
         plt.xlabel("Predicted Label")
         plt.ylabel("True Label")
         plt.title(f"Confusion Matrix - Run {i+1}")
-        display(plt.gcf())  # Display figure explicitly
+        plt.show()
+        # display(plt.gcf())  # Display figure explicitly
         plt.close()  # Close figure to prevent memory issues
 
     # Convert results to Pandas DataFrame
