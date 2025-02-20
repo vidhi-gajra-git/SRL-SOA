@@ -1,4 +1,4 @@
-%matplotlib inline
+
 import os
 import scipy.io
 import numpy as np
@@ -25,7 +25,7 @@ try:
     from GCSR_BS.EGCSR_BS_Ranking import EGCSR_BS_Ranking as EGCSR_R
 except ModuleNotFoundError:
     pass
-
+matplotlib.use('TkAgg')
 np.random.seed(10)
 tf.random.set_seed(10)
 # Connect MLflow to DagsHub
