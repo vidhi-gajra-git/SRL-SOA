@@ -137,7 +137,8 @@ def reduce_bands(param, classData, Data, i):
         weightsDir = 'weights/' + dataset + '/'
         if not os.path.exists(weightsDir): os.makedirs(weightsDir)
         weightName = weightsDir + modelType + '_q' + str(q) + '_run' + str(i) + '.weights.h5'
-        model = networks.SLRol(n_bands = n_bands, q = q)
+        model_name , model = networks.SLRol(n_bands = n_bands, q = q)
+        
 
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
             weightName, monitor='val_loss', verbose=1,
