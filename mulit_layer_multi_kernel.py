@@ -24,6 +24,8 @@ class SparseAutoencoderNonLinear2(tf.keras.Model):
             filters=n, kernel_size=1, padding='same', activation=None,  
             kernel_regularizer=regularizers.l1(self.lambda_l1)
         )
+    def get_hyperparameters(self):
+        return {k: v for k, v in self.__dict__.items() if isinstance(v, (int, float, str, bool))}
 
     def call(self, inputs):
         multi_scale_outputs = []
@@ -46,7 +48,8 @@ class SparseAutoencoderNonLinear2(tf.keras.Model):
         if self.activation is not None:
             x = eval('tf.nn.' + self.activation + '(x)')
 
-        x = tf.vectorized_map(fn=diag_zero, elems=x)  # Diagonal constraint
+        x = tf.vectorized_map(fn=diag_zero, elems=x) 
+        # Diagonal constraint
         
         return x
 
