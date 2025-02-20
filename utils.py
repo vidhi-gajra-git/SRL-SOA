@@ -138,7 +138,7 @@ def reduce_bands(param, classData, Data, i):
         weightsDir = 'weights/' + dataset + '/'
         if not os.path.exists(weightsDir): os.makedirs(weightsDir)
         weightName = weightsDir + modelType + '_q' + str(q) + '_run' + str(i) + '.weights.h5'
-        model_name , model = networks.SLRol(n_bands = n_bands, q = q)
+        model_name , hyperparams ,  model = networks.SLRol(n_bands = n_bands, q = q)
         
 
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
@@ -159,7 +159,7 @@ def reduce_bands(param, classData, Data, i):
                 mlflow.log_artifact("model_architecture.json")
             
                 # Log custom hyperparameters
-                mlflow.log_params(model.get_hyperparameters())
+                mlflow.log_params(hyperparams)
 
                 
                 # mlflow.log_param("num_conv_layers", num_conv_layers)
