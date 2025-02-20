@@ -16,7 +16,7 @@ import pandas as pd
 from IPython.display import display
 import mlflow
 import dagshub
-
+import matplotlib 
 
 try:
     from BandSelection.classes.SpaBS import SpaBS
@@ -24,7 +24,7 @@ try:
     from GCSR_BS.EGCSR_BS_Ranking import EGCSR_BS_Ranking as EGCSR_R
 except ModuleNotFoundError:
     pass
-
+%matplotlib inline 
 np.random.seed(10)
 tf.random.set_seed(10)
 # Connect MLflow to DagsHub
@@ -341,6 +341,6 @@ def evalPerformance(classData, y_predict,n):
     plt.ylabel("Score")
     plt.title("Performance Metrics Across Runs")
     plt.legend()
-    
-    display(plt.gcf())  # Explicitly display the figure
+    plt.show()
+    # display(plt.gcf())  # Explicitly display the figure
     plt.close()  # Close the figure to prevent file access issues
