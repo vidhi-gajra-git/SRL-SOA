@@ -201,11 +201,13 @@ def reduce_bands(param, classData, Data, i):
             with open(cm_csv_path, "a") as f:
                 # for i, cm_df in enumerate(confusion_matrices):
                     f.write(f"Selected_bands - Run {i+1}\n")
+                    f.write(str(all_bands[:]))
                     df_bands.to_csv(f)
                     f.write("\n")  # Add a newline between matrices
         else :
             with open( csv_file_path, "w") as f:
                 f.write(f"Selected_bands - Run {i+1}\n")
+                f.write(str(all_bands[:]))
                 df_bands.to_csv(f)
                 f.write("\n")
 
@@ -275,7 +277,7 @@ def evalPerformance(classData, y_predict,n):
     confusion_matrices = []  # Store confusion matrices for CSV
     
       for i in range(n):
-        with mlflow.start_run(nested=True): 
+        with mlflow.start_run(run_id=run_id ,nested=True): 
         y_test = classData[i]['y_test']
         cm = confusion_matrix(y_test, y_predict[i])
 
@@ -311,6 +313,12 @@ def evalPerformance(classData, y_predict,n):
         plt.ylabel("True Label")
         plt.title(f"Confusion Matrix - Run {i+1}")
         plt.show()
+        plot_path = f"cm_heatmap_run{i}.png"
+        plt.savefig(plot_path)
+        
+        mlflow.log_artifact(plot_path)
+
+    
         # display(plt.gcf())  # Display figure explicitly
         plt.close()  # Close figure to prevent memory issues
 
@@ -366,7 +374,7 @@ def evalPerformance(classData, y_predict,n):
     plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
     plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
     plt.bar(np.arange(n) + 2 * width, kappa, width=width, label="Kappa Coefficient", color="red")
-
+    
     plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
     plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
     plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1, label="Avg Kappa")
@@ -376,5 +384,9 @@ def evalPerformance(classData, y_predict,n):
     plt.title("Performance Metrics Across Runs")
     plt.legend()
     plt.show()
+    plot_path = "plot2.png"
+    plt.savefig(plot_path)
+    
+
     # display(plt.gcf())  # Explicitly display the figure
     plt.close()  # Close the figure to prevent file access issues
