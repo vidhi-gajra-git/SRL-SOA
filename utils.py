@@ -14,6 +14,10 @@ import networks
 import ipykernel
 import pandas as pd
 from IPython.display import display
+import mlflow
+import dagshub
+
+
 try:
     from BandSelection.classes.SpaBS import SpaBS
     from BandSelection.classes.ISSC import ISSC_HSI
@@ -23,6 +27,15 @@ except ModuleNotFoundError:
 
 np.random.seed(10)
 tf.random.set_seed(10)
+# Connect MLflow to DagsHub
+dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
+# dagshub.auth.add_credentials(
+#     username="your-dagshub-username",
+#     token="your-dagshub-access-token"
+# )
+
+mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
+
 
 def loadData(dataset):
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
@@ -133,10 +146,28 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
-            model.fit(xx, xx, batch_size = batchSize,
-                    callbacks=callbacks_osen, shuffle=True,
-                    validation_data=(xx, xx), epochs = epochs)
+            mlflow.tensorflow.autolog()
+
+            with mlflow.start_run():
+                model_json = model.to_json()
+                with open("model_architecture.json", "w") as json_file:
+                    json_file.write(model_json)
+
+                # Log model architecture
+                mlflow.log_artifact("model_architecture.json")
+            
+                # Log custom hyperparameters
+                mlflow.log_params(vars(model))
+                # mlflow.log_param("num_conv_layers", num_conv_layers)
+                # mlflow.log_param("activation", activation)
+                # mlflow.log_param("lambda_l1", lambda_l1)
+
+                model.fit(xx, xx, batch_size = batchSize,
+                        callbacks=callbacks_osen, shuffle=True,
+                        validation_data=(xx, xx), epochs = epochs)
+                mlflow.tensorflow.log_model(model,model_name)
             print(modelType + ' is trained!')
+            
 
         intermediate_layer_model = tf.keras.Model(inputs = model.input,
                                         outputs = model.layers[1].output)
