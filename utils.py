@@ -149,7 +149,7 @@ def reduce_bands(param, classData, Data, i):
 
         if weights == 'False':
             mlflow.tensorflow.autolog()
-            run_name = f"{modelType}_run{i}"
+            run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
                 parent_run_id = parent_run.info.run_id
                 with open("run_id.txt", "w") as f:
