@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.keras import layers, regularizers
 
-class SparseAutoencoderNonLinear(tf.keras.Model):
+class SparseAutoencoderNonLinear2(tf.keras.Model):
     def __init__(self, n, q, kernel_size, num_conv_layers=2, activation='tanh', lambda_l1=0.01):
-        super(SparseAutoencoderNonLinear, self).__init__(name=f'SparseAutoencoder_k{kernel_size}')
+        super(SparseAutoencoderNonLinear2, self).__init__(name=f'SparseAutoencoder_k{kernel_size}')
         self.n = n
         self.q = q
         self.kernel_size = kernel_size
