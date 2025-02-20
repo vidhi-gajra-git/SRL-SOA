@@ -289,9 +289,10 @@ def evalPerformance(classData, y_predict,n):
         report = classification_report(y_test, y_predict[i], output_dict=True)
 
         # Log SVM metrics
-        mlflow.log_metric("svm_oa", oa[i])
-        mlflow.log_metric("svm_aa", aa[i])
-        mlflow.log_metric("svm_kappa", kappa[i])
+         mlflow.log_metric("svm_oa", oa[i], step=i)
+        mlflow.log_metric("svm_aa", aa[i], step=i)
+        mlflow.log_metric("svm_kappa", kappa[i], step=i)
+
         
         mlflow.log_dict(report, "svm_classification_report.json")
 
@@ -356,36 +357,41 @@ def evalPerformance(classData, y_predict,n):
     display(df_results)  # Use display() to properly render the table
 
     # Compute average performance metrics
-    avg_oa = np.mean(oa)
-    avg_aa = np.mean(aa)
-    avg_kappa = np.mean(kappa)
-    print(f"\nAverage Performance Over {n} Runs:")
-    print(f"Overall Accuracy: {avg_oa:.4f}")
-    print(f"Average Accuracy: {avg_aa:.4f}")
-    print(f"Kappa Coefficient: {avg_kappa:.4f}")
-
-    # Visualization: Plot different accuracy metrics across runs
-    sns.set_style("whitegrid")
-    plt.figure(figsize=(8, 5))
-
-    x_labels = [f"Run {i+1}" for i in range(n)]
-    width = 0.2  # Bar width
-
-    plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
-    plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
-    plt.bar(np.arange(n) + 2 * width, kappa, width=width, label="Kappa Coefficient", color="red")
+   
+    with mlflow.start_run(run_id=run_id): 
+        avg_oa = np.mean(oa)
+        avg_aa = np.mean(aa)
+        avg_kappa = np.mean(kappa)
+        mlflow.log_metric("Final_Overall_Accuracy", avg_oa)
+        mlflow.log_metric("Final_Average_Accuracy", avg_aa)
+        mlflow.log_metric("Final_Kappa_Coefficient", avg_kappa)
+        print(f"\nAverage Performance Over {n} Runs:")
+        print(f"Overall Accuracy: {avg_oa:.4f}")
+        print(f"Average Accuracy: {avg_aa:.4f}")
+        print(f"Kappa Coefficient: {avg_kappa:.4f}")
     
-    plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
-    plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
-    plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1, label="Avg Kappa")
-
-    plt.xticks(np.arange(n) + width, x_labels)
-    plt.ylabel("Score")
-    plt.title("Performance Metrics Across Runs")
-    plt.legend()
-    plt.show()
-    plot_path = "plot2.png"
-    plt.savefig(plot_path)
+        # Visualization: Plot different accuracy metrics across runs
+        sns.set_style("whitegrid")
+        plt.figure(figsize=(8, 5))
+    
+        x_labels = [f"Run {i+1}" for i in range(n)]
+        width = 0.2  # Bar width
+    
+        plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
+        plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
+        plt.bar(np.arange(n) + 2 * width, kappa, width=width, label="Kappa Coefficient", color="red")
+        
+        plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
+        plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
+        plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1, label="Avg Kappa")
+    
+        plt.xticks(np.arange(n) + width, x_labels)
+        plt.ylabel("Score")
+        plt.title("Performance Metrics Across Runs")
+        plt.legend()
+        plt.show()
+        plot_path = "plot2.png"
+        plt.savefig(plot_path)
     
 
     # display(plt.gcf())  # Explicitly display the figure
