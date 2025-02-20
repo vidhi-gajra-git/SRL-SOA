@@ -1,4 +1,4 @@
-%matplotlib inline 
+%matplotlib inline
 import os
 import scipy.io
 import numpy as np
