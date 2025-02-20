@@ -359,9 +359,9 @@ def evalPerformance(classData, y_predict,n):
     # Compute average performance metrics
    
     with mlflow.start_run(run_id=run_id): 
-        avg_oa = np.mean(oa)
-        avg_aa = np.mean(aa)
-        avg_kappa = np.mean(kappa)
+        avg_oa = np.mean(oa[:-1])
+        avg_aa = np.mean(aa[:-1])
+        avg_kappa = np.mean(kappa[:-1])
         mlflow.log_metric("Final_Overall_Accuracy", avg_oa)
         mlflow.log_metric("Final_Average_Accuracy", avg_aa)
         mlflow.log_metric("Final_Kappa_Coefficient", avg_kappa)
