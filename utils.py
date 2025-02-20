@@ -198,7 +198,7 @@ def reduce_bands(param, classData, Data, i):
         df_bands = pd.DataFrame([band_presence], columns=all_bands)
         # df_bands.to_csv()
         if os.path.exists( csv_file_path):
-            with open(cm_csv_path, "a") as f:
+            with open(csv_file_path, "a") as f:
                 # for i, cm_df in enumerate(confusion_matrices):
                     f.write(f"Selected_bands - Run {i+1}\n")
                     f.write(str(all_bands[:]))
