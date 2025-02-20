@@ -27,7 +27,7 @@ def SLRol(n_bands, q):
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
 
   model = tf.keras.models.Model(input, y, name='OSEN')
-  hyperparams = Oper1D.get_hyperparamters()
+  hyperparams = Oper1D.get_hyperparameters()
  
 
   optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
