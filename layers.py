@@ -4,7 +4,7 @@ import tensorflow as tf
 # Operational Layers.
 class Oper1D(tf.keras.Model):
   def __init__(self, filters, kernel_size, activation = None, q = 1):
-    super(Oper1D, self).__init__(name='')
+    super(Oper1D, self).__init__(name='Oper1D')
 
     self.diagonal = tf.zeros(filters)
     self.activation = activation
