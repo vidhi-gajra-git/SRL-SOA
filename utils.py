@@ -254,7 +254,7 @@ def reduce_bands(param, classData, Data, i):
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
                 execution_time = round(time.time() - start_time, 2)  # Seconds
-                model_size = round(os.path.getsize("weights/Indian_pines_corrected/SRL-SOA_q3_run5.weights.h5") / (1024 ** 2), 2)
+                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/SRL-SOA_q3_run{i}.weights.h5") / (1024 ** 2), 2)
                 
                 
                 mlflow.tensorflow.log_model(model,model_name)
