@@ -11,6 +11,9 @@ import svm
 import rf
 import utils
 # Restrict TensorFlow to only use GPU 0
+import tensorflow as tf
+print("$"*10,"GPUs Available:", tf.config.list_physical_devices('GPU'),"$"*10)
+
 tf.config.set_visible_devices(tf.config.list_physical_devices('GPU')[0], 'GPU')
 
 # Allow TensorFlow to dynamically allocate GPU memory
