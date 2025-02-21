@@ -43,6 +43,75 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import scipy.io
+def loadEvalData(dataset):
+    np.random.seed(42)  # Set global seed
+
+    Data = scipy.io.loadmat('data/' + dataset + '.mat')
+    if 'Indian' in dataset:
+        Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
+    elif 'SalinasA' in dataset:
+        Gtd = scipy.io.loadmat('data/' + 'SalinasA_gt.mat')
+    else:
+        Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
+
+    if dataset == 'Indian_pines_corrected':
+        image = Data['indian_pines_corrected']
+        gtd = Gtd['indian_pines_gt']
+    elif dataset == 'SalinasA_corrected':
+        image = Data['salinasA_corrected']
+        gtd = Gtd['salinasA_gt']
+    else:
+        raise ValueError('The selected dataset is not valid.')
+
+    image = np.array(image, dtype='float32')
+    gtd = np.array(gtd, dtype='float32')
+
+    xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+    label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]])
+
+    x_class = xx[label != 0]
+    y_class = label[label != 0]
+
+    # Fit a single scaler for consistency
+    global_scaler = StandardScaler()
+    global_scaler.fit(x_class)
+
+    classDataa = []
+    Dataa = []
+    for _ in range(10):  # No need to vary seed in loop
+        x_train, x_test, y_train, y_test = train_test_split(
+            x_class, y_class, test_size=2, random_state=42
+        )
+
+        # Use the global scaler
+        x_train = global_scaler.transform(x_train)
+        x_test = global_scaler.transform(x_test)
+
+        classData = {
+            'x_train': x_train,
+            'x_test': x_test,
+            'y_train': y_train - 1,
+            'y_test': y_test - 1
+        }
+
+        # Process image data with the same scaler
+        sc = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+        sc = global_scaler.transform(sc)
+        scd = sc[label == 0]
+        sc = np.reshape(sc, [image.shape[0], image.shape[1], image.shape[2]])
+
+        Data = {'scd': scd, 'sc': sc, 'gtd': gtd}
+
+        classDataa.append(classData)
+        Dataa.append(Data)
+
+    print('\nScene: ', sc.shape)
+    print('\nClassification:')
+    print('Training samples: ', len(classData['x_train']))
+    print('Test samples: ', len(classData['x_test']))
+    print('\nNumber of bands: ', str(classData['x_train'].shape[-1]))
+
+    return classDataa, Dataa
 
 def loadData(dataset):
     np.random.seed(42)  # Set global seed
