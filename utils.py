@@ -258,8 +258,8 @@ def reduce_bands(param, classData, Data, i):
                 
                 
                 mlflow.tensorflow.log_model(model,model_name)
-                mlflow.log_metric("Execution Time (s)", execution_time)
-                mlflow.log_param("Model Size (MB)", model_size)
+                mlflow.log_metric("Execution_Time_seconds", execution_time)
+                mlflow.log_param("Model_Size_MB", model_size)
             print(modelType + ' is trained!')
             
 
