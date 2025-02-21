@@ -325,7 +325,7 @@ def reduce_bands(param, classData, Data, i):
     print('Selected number of bands: ', str(classData['x_train'].shape[-1]))
     print(f'======Selected band indices ======= \n {ind_a}')
 
-    return indices[-s_bands::]
+    return list(ind_a)
 
 def evalPerformance(classData, y_predict,n):
      # Number of runs
