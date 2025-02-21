@@ -19,6 +19,10 @@ from IPython.display import display
 import mlflow
 import dagshub
 import matplotlib 
+import time
+import psutil
+import platform
+
 # %matplotlib inline
 try:
     from BandSelection.classes.SpaBS import SpaBS
@@ -38,6 +42,10 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 
 mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
 mlflow.set_experiment("SRL_SOA_V.1")
+# Capture System Metrics
+cpu_info = platform.processor()
+cpu_count = psutil.cpu_count(logical=True)
+ram_total = round(psutil.virtual_memory().total / (1024 ** 3), 2)  # GB
 
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -217,7 +225,14 @@ def reduce_bands(param, classData, Data, i):
             mlflow.tensorflow.autolog()
             run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
+                
                 parent_run_id = parent_run.info.run_id
+                mlflow.log_param("CPU", cpu_info)
+                mlflow.log_param("CPU Cores", cpu_count)
+                mlflow.log_param("RAM (GB)", ram_total)
+                mlflow.log_param("OS", platform.system() + " " + platform.release())
+                mlflow.log_param("Python Version", platform.python_version())
+                mlflow.log_param("Scikit-Learn Version", sklearn.__version__)
                 with open("run_id.txt", "w") as f:
                     f.write(parent_run_id)
                 model_json = model.to_json()
@@ -234,11 +249,17 @@ def reduce_bands(param, classData, Data, i):
                 # mlflow.log_param("num_conv_layers", num_conv_layers)
                 # mlflow.log_param("activation", activation)
                 # mlflow.log_param("lambda_l1", lambda_l1)
-
+                start_time=time.time()
                 model.fit(xx, xx, batch_size = batchSize,
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
+                execution_time = round(time.time() - start_time, 2)  # Seconds
+                model_size = round(os.path.getsize("weights/Indian_pines_corrected/SRL-SOA_q3_run5.weights.h5") / (1024 ** 2), 2)
+                
+                
                 mlflow.tensorflow.log_model(model,model_name)
+                mlflow.log_metric("Execution Time (s)", execution_time)
+                mlflow.log_param("Model Size (MB)", model_size)
             print(modelType + ' is trained!')
             
 
