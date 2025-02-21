@@ -226,7 +226,7 @@ def reduce_bands(param, classData, Data, i):
             run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
                 
-                # parent_run_id = parent_run.info.run_id
+                parent_run_id = parent_run.info.run_id
                 # # mlflow.log_param("CPU", cpu_info)
                 # mlflow.log_param("CPU Cores", cpu_count)
                 # mlflow.log_param("RAM (GB)", ram_total)
