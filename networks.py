@@ -33,10 +33,14 @@ def SLRol(n_bands, q):
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
 
   model = tf.keras.models.Model(input, y, name='OSEN')
+  lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
+    initial_learning_rate=0.001,
+    decay_steps=10000,
+    decay_rate=0.9
+)
 
- 
-
-  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+  optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule)
+  # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   model.compile(optimizer=optimizer,loss='mse')
