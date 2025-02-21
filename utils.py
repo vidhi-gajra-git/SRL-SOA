@@ -38,11 +38,21 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
 
 
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+import scipy.io
+
 def loadData(dataset):
+    np.random.seed(42)  # Set global seed
+
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
-    if 'Indian' in dataset: Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
-    elif 'SalinasA' in dataset: Gtd = scipy.io.loadmat('data/' + 'SalinasA_gt.mat')
-    else: Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
+    if 'Indian' in dataset:
+        Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
+    elif 'SalinasA' in dataset:
+        Gtd = scipy.io.loadmat('data/' + 'SalinasA_gt.mat')
+    else:
+        Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
 
     if dataset == 'Indian_pines_corrected':
         image = Data['indian_pines_corrected']
@@ -50,73 +60,59 @@ def loadData(dataset):
     elif dataset == 'SalinasA_corrected':
         image = Data['salinasA_corrected']
         gtd = Gtd['salinasA_gt']
-    else: print('The selected dataset is not valid.')
+    else:
+        raise ValueError('The selected dataset is not valid.')
 
-    image = np.array(image, dtype = 'float32')
-    gtd = np.array(gtd, dtype = 'float32')
+    image = np.array(image, dtype='float32')
+    gtd = np.array(gtd, dtype='float32')
 
     xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-
-    # Classification data.
     label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]])
 
     x_class = xx[label != 0]
     y_class = label[label != 0]
 
+    # Fit a single scaler for consistency
+    global_scaler = StandardScaler()
+    global_scaler.fit(x_class)
+
     classDataa = []
     Dataa = []
-    for i in range(0, 10):
+    for _ in range(10):  # No need to vary seed in loop
+        x_train, x_test, y_train, y_test = train_test_split(
+            x_class, y_class, test_size=0.85, random_state=42
+        )
 
-        classData = {}
-        Data = {}
+        # Use the global scaler
+        x_train = global_scaler.transform(x_train)
+        x_test = global_scaler.transform(x_test)
 
-        if dataset == 'Indian_pines_corrected':
-            x_train, x_test, y_train, y_test = train_test_split(x_class, y_class,
-            test_size = 0.95, random_state = i + 1)
-        else:
-            x_train, x_test, y_train, y_test = train_test_split(x_class, y_class,
-            test_size = 0.95, random_state = i + 1)
+        classData = {
+            'x_train': x_train,
+            'x_test': x_test,
+            'y_train': y_train - 1,
+            'y_test': y_test - 1
+        }
 
-        scaler = StandardScaler().fit(x_train)
-        x_train = scaler.transform(x_train)
-        x_test = scaler.transform(x_test)
-
-        classData['x_train'] = x_train
-        classData['x_test'] = x_test
-        classData['y_train'] = y_train - 1
-        classData['y_test'] = y_test - 1
-
-        del x_train, x_test, y_train, y_test
-
-        # Image data.
-
+        # Process image data with the same scaler
         sc = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-
-        sc = scaler.transform(sc)
-
+        sc = global_scaler.transform(sc)
         scd = sc[label == 0]
-
         sc = np.reshape(sc, [image.shape[0], image.shape[1], image.shape[2]])
 
-        Data['scd'] = scd
-        Data['sc'] = sc
-        Data['gtd'] = gtd
+        Data = {'scd': scd, 'sc': sc, 'gtd': gtd}
 
         classDataa.append(classData)
         Dataa.append(Data)
 
     print('\nScene: ', sc.shape)
-
-    
     print('\nClassification:')
     print('Training samples: ', len(classData['x_train']))
     print('Test samples: ', len(classData['x_test']))
-
-    print('\n')
-    print('Number of bands: ', str(classData['x_train'].shape[-1]))
-    
+    print('\nNumber of bands: ', str(classData['x_train'].shape[-1]))
 
     return classDataa, Dataa
+
 
 def reduce_bands(param, classData, Data, i):
     modelType = param['modelType']
