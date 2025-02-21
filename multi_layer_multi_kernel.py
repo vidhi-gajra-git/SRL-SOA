@@ -24,11 +24,13 @@ class SparseAutoencoderNonLinear2(tf.keras.Model):
             filters=n, kernel_size=1, padding='same', activation=None,  
             kernel_regularizer=regularizers.l1(self.lambda_l1)
         )
+
     def get_hyperparameters(self):
         return {k: v for k, v in self.__dict__.items() if isinstance(v, (int, float, str, bool))}
 
     def call(self, inputs):
         multi_scale_outputs = []
+        
         def diag_zero(input):
             x_0 = tf.linalg.set_diag(input, self.diagonal)
             return x_0
@@ -49,8 +51,6 @@ class SparseAutoencoderNonLinear2(tf.keras.Model):
             x = eval('tf.nn.' + self.activation + '(x)')
 
         x = tf.vectorized_map(fn=diag_zero, elems=x) 
-        # Diagonal constraint
-        
         return x
 
 
@@ -64,20 +64,32 @@ class MultiKernelEncoder(tf.keras.Model):
         self.final_op = final_op
         self.diagonal = tf.zeros(n)
 
+        # **Add Layer Normalization Before Multiplication**
+        self.norm_3 = layers.LayerNormalization()
+        self.norm_5 = layers.LayerNormalization()
+        self.norm_7 = layers.LayerNormalization()
+
         if final_op == 'conv':
             self.final_conv = layers.Conv2D(filters=1, kernel_size=(3,3), padding='same', activation='tanh')
-    def diag_zero(input):
-            x_0 = tf.linalg.set_diag(input, self.diagonal)
-            return x_0
+
+    def diag_zero(self, input):
+        x_0 = tf.linalg.set_diag(input, self.diagonal)
+        return x_0
+
     def get_hyperparameters(self):
-        dictt=self.encoder_3.get_hyperparameters()
-        dictt['architecture']=[3,5,7]
-        
+        dictt = self.encoder_3.get_hyperparameters()
+        dictt['architecture'] = [3, 5, 7]
         return dictt
+
     def call(self, inputs):
         op1 = self.encoder_3(inputs)
         op2 = self.encoder_5(inputs)
         op3 = self.encoder_7(inputs)
+
+        # **Normalize Outputs Before Multiplication**
+        op1 = self.norm_3(op1)
+        op2 = self.norm_5(op2)
+        op3 = self.norm_7(op3)
 
         if self.final_op == 'multiply':
             output = op1 * op2 * op3  # Element-wise multiplication
@@ -85,26 +97,6 @@ class MultiKernelEncoder(tf.keras.Model):
             # Stacking along channel dimension to perform 2D conv
             x = tf.stack([op1, op2, op3], axis=-1)  # Shape (batch_size, n, n, 3)
             output = self.final_conv(x)
-            x = tf.vectorized_map(fn=diag_zero, elems=output) 
-            output=x
-        else:
-            raise ValueError("Invalid final_op. Choose 'multiply' or 'conv'.")
-
+        
+        output = tf.vectorized_map(fn=self.diag_zero, elems=output)  # Diagonal constraint
         return output
-
-# Example usage:
-# n = 64  # Example size
-# q = 3   # Polynomial degree
-# batch_size = 8
-
-# # Define input shape (batch_size, n, 1)
-# inputs = tf.keras.Input(shape=(n, 1))
-# model = MultiKernelEncoder(n=n, q=q, final_op='conv')
-# output = model(inputs)
-
-# # Compile with Mean Squared Error loss
-# model.compile(optimizer='adam', loss='mse')
-
-# # Model summary
-# model.build(input_shape=(None, n, 1))
-# model.summary()
