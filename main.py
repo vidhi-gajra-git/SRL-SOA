@@ -91,7 +91,7 @@ for i in range(0, 3): # 10 runs ...
 for i in range(3, 7): # 10 runs ...
     
     if i<6 and param['modelType'] != 'None':
-                selected_bands=utils.reduce_bands(param, classData[i], Data[i], i)   
+        selected_bands=utils.reduce_bands(param, classData[i], Data[i], i)   
         
 
         print('Classification...')
