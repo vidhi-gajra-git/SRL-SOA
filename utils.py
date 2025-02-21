@@ -21,7 +21,7 @@ import dagshub
 import matplotlib 
 import time
 import psutil
-import platform
+# import platform
 
 # %matplotlib inline
 try:
@@ -43,7 +43,7 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
 mlflow.set_experiment("SRL_SOA_V.1")
 # Capture System Metrics
-cpu_info = platform.processor()
+# cpu_info = platform.processor()
 cpu_count = psutil.cpu_count(logical=True)
 ram_total = round(psutil.virtual_memory().total / (1024 ** 3), 2)  # GB
 
@@ -227,7 +227,7 @@ def reduce_bands(param, classData, Data, i):
             with mlflow.start_run(run_name=run_name) as parent_run:
                 
                 parent_run_id = parent_run.info.run_id
-                mlflow.log_param("CPU", cpu_info)
+                # mlflow.log_param("CPU", cpu_info)
                 mlflow.log_param("CPU Cores", cpu_count)
                 mlflow.log_param("RAM (GB)", ram_total)
                 mlflow.log_param("OS", platform.system() + " " + platform.release())
