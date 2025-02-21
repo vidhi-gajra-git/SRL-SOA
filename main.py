@@ -74,13 +74,15 @@ for i in range(0, 3): # 10 runs ...
         # Data[i] = utils.reduce_bands(param, classData[i], Data[i], i)    
 
     print('Classification...')
-    if parameterSearch:
-        pass 
-        # If hyper-parameter search is selected.
-        # best_parameters, class_model = svm.svm_train_search(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
-        # print('\nBest paramters:' + str(best_parameters))
-    else:
-        class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+    class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+    
+    # if parameterSearch:
+    #     pass 
+    #     # If hyper-parameter search is selected.
+    #     # best_parameters, class_model = svm.svm_train_search(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+    #     # print('\nBest paramters:' + str(best_parameters))
+    # else:
+    #     class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
     
     
 
@@ -89,21 +91,27 @@ for i in range(0, 3): # 10 runs ...
 for i in range(3, 7): # 10 runs ...
     
     if i<6 and param['modelType'] != 'None':
-                selected_bands=utils.reduce_bands(param, classData[i], Data[i], i)     
+                selected_bands=utils.reduce_bands(param, classData[i], Data[i], i)   
+        
 
-    print('Classification...')
-    if parameterSearch:
-        # If hyper-parameter search is selected.
-        if i==6:
-           print("$"*10,"Note the final o/p is tested on all bands","$"*10)
-        # best_parameters, class_model = svm.svm_train_search(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
-        # print('\nBest paramters:' + str(best_parameters))
-    else:
-         class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+        print('Classification...')
+        class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+        y_predict.append(class_model.predict(classDataEval[i]['x_test'][:,selected_bands ]))
+    if==6 and param['modelType'] != 'None':
+        class_model = svm.svm_train(classDataEval[i]['x_train'], classDataEval[i]['y_train'])
+        y_predict.append(class_model.predict(classDataEval[i]['x_test']))
+    # if parameterSearch:
+    #     # If hyper-parameter search is selected.
+    #     if i==6:
+    #        print("$"*10,"Note the final o/p is tested on all bands","$"*10)
+    #     # best_parameters, class_model = svm.svm_train_search(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
+    #     # print('\nBest paramters:' + str(best_parameters))
+    # else:
+    #      class_model = svm.svm_train(classDataEval[i]['x_train'][:,selected_bands ], classDataEval[i]['y_train'])
     
 
-
-    y_predict.append(class_model.predict(classDataEval[i]['x_test'][:,selected_bands ]))
+    
+    
     utils.evalPerformance(classDataEval, y_predict,i+1)
     
 
