@@ -55,7 +55,7 @@ class SparseAutoencoderNonLinear2(tf.keras.Model):
 
 
 class MultiKernelEncoder(tf.keras.Model):
-    def __init__(self, n, q, num_conv_layers=2, activation='tanh', lambda_l1=0.01, final_op='conv'):
+    def __init__(self, n, q, num_conv_layers=2, activation='tanh', lambda_l1=0.01, final_op='multiply'):
         super(MultiKernelEncoder, self).__init__(name='MultiKernelEncoder')
         self.encoder_3 = SparseAutoencoderNonLinear(n, q, kernel_size=3, num_conv_layers=num_conv_layers, activation=activation, lambda_l1=lambda_l1)
         self.encoder_5 = SparseAutoencoderNonLinear(n, q, kernel_size=5, num_conv_layers=num_conv_layers, activation=activation, lambda_l1=lambda_l1)
