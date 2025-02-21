@@ -37,7 +37,7 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 # )
 
 mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
-
+mlflow.set_experiment("New_SVM_Experiment")
 
 import numpy as np
 from sklearn.model_selection import train_test_split
