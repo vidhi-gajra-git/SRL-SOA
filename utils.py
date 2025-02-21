@@ -226,13 +226,13 @@ def reduce_bands(param, classData, Data, i):
             run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
                 
-                parent_run_id = parent_run.info.run_id
-                # mlflow.log_param("CPU", cpu_info)
-                mlflow.log_param("CPU Cores", cpu_count)
-                mlflow.log_param("RAM (GB)", ram_total)
-                mlflow.log_param("OS", platform.system() + " " + platform.release())
-                mlflow.log_param("Python Version", platform.python_version())
-                mlflow.log_param("Scikit-Learn Version", sklearn.__version__)
+                # parent_run_id = parent_run.info.run_id
+                # # mlflow.log_param("CPU", cpu_info)
+                # mlflow.log_param("CPU Cores", cpu_count)
+                # mlflow.log_param("RAM (GB)", ram_total)
+                # mlflow.log_param("OS", platform.system() + " " + platform.release())
+                # mlflow.log_param("Python Version", platform.python_version())
+                # mlflow.log_param("Scikit-Learn Version", sklearn.__version__)
                 with open("run_id.txt", "w") as f:
                     f.write(parent_run_id)
                 model_json = model.to_json()
