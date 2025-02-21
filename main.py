@@ -83,7 +83,7 @@ for i in range(0, 3): # 10 runs ...
     
     
 
-    y_predict.append(class_model.predict(classDataEval[i]['x_test']))
+    y_predict.append(class_model.predict(classDataEval[i]['x_test'][:,selected_bands ]))
     utils.evalPerformance(classDataEval, y_predict,i+1)
 for i in range(3, 7): # 10 runs ...
     
