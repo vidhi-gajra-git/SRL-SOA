@@ -70,7 +70,7 @@ class MultiKernelEncoder(tf.keras.Model):
             x_0 = tf.linalg.set_diag(input, self.diagonal)
             return x_0
     def get_hyperparameters(self):
-        dictt=SparseAutoencoderNonLinear2(n, q, kernel_size=3, num_conv_layers=num_conv_layers, activation=activation, lambda_l1=lambda_l1).get_hyperparameters()
+        dictt=encoder_3.get_hyperparameters()
         dictt['architecture']=[3,5,7]
         
         return dictt
