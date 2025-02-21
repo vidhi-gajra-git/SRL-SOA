@@ -35,7 +35,7 @@ tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('GPU')[
 np.random.seed(42)
 tf.random.set_seed(42)
 np.random.seed(42)
-np.random.set_seed(42)
+# np.random.set_seed(42)
 ap = argparse.ArgumentParser()
 ap.add_argument('--method', default='SRL-SOA', help =
                 "SRL-SOA, PCA, SpaBS, EGCSR_R, ISSC, None (for no band selection).")
