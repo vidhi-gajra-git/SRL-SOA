@@ -19,7 +19,7 @@ def svm_train_search(X_train, y_train):
 
 def svm_train(X_train, y_train):
   
-  svm_model = SVC(kernel = 'rbf', gamma = 0.01, C = 100, random_state = 1)
+  svm_model = SVC(kernel='rbf', C=100,  random_state=42, decision_function_shape= 'ovo', gamma= 0.1)
   
   print('\nSVM Train...')
   svm_model.fit(X_train, y_train)
