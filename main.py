@@ -12,9 +12,23 @@ import rf
 import utils
 # Restrict TensorFlow to only use GPU 0
 import tensorflow as tf
-print("$"*10,"GPUs Available:", tf.config.list_physical_devices('GPU'),"$"*10)
+import tensorflow as tf
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print("$"*10,"GPUs Available:", tf.config.list_physical_devices('GPU'),"$"*10)
+    try:
+        for gpu in gpus:
+            
+            tf.config.experimental.set_memory_growth(gpu, True)
+        print("GPU is configured for TensorFlow!")
+    except RuntimeError as e:
+        print(e)
+else:
+    print("No GPU found, running on CPU.")
 
-tf.config.set_visible_devices(tf.config.list_physical_devices('GPU')[0], 'GPU')
+
+
+# tf.config.set_visible_devices(tf.config.list_physical_devices('GPU')[0], 'GPU')
 
 # Allow TensorFlow to dynamically allocate GPU memory
 tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('GPU')[0], True)
