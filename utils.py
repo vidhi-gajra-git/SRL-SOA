@@ -139,7 +139,7 @@ def reduce_bands(param, classData, Data, i):
         
 
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
-            weightName, monitor='val_loss', verbose=1,
+            weightName, monitor='val_loss', verbose=0,
             save_best_only=True, mode='min', save_weights_only=True)
 
         callbacks_osen = [checkpoint_osen]
@@ -197,8 +197,8 @@ def reduce_bands(param, classData, Data, i):
         if os.path.exists( csv_file_path):
             with open(csv_file_path, "a") as f:
                 # for i, cm_df in enumerate(confusion_matrices):
-                    f.write(f"Selected_bands - Run {i+1}\n")
-                    f.write(str(all_bands[:]))
+                    # f.write(f"Selected_bands - Run {i+1}\n")
+                    # f.write(str(all_bands[:]))
                     df_bands.to_csv(f)
                     f.write("\n")  # Add a newline between matrices
         else :
@@ -256,7 +256,7 @@ def reduce_bands(param, classData, Data, i):
     print('Selected number of bands: ', str(classData['x_train'].shape[-1]))
     print(f'======Selected band indices ======= \n {ind_a}')
 
-    return classData, Data
+    return indices[-s_bands::]
 
 def evalPerformance(classData, y_predict,n):
      # Number of runs
@@ -327,11 +327,12 @@ def evalPerformance(classData, y_predict,n):
     # Save results to the "results" folder
     results_folder = "results"
     os.makedirs(results_folder, exist_ok=True)
-
+    
     # Save accuracy results
     csv_path = os.path.join(results_folder, f"performance_results{i}.csv")
     df_results.to_csv(csv_path, index=False)
     print(f"\nPerformance results saved to: {csv_path}")
+    
 
     # Save confusion matrices
     cm_csv_path = os.path.join(results_folder, "confusion_matrices.csv")
@@ -341,6 +342,11 @@ def evalPerformance(classData, y_predict,n):
                 f.write(f"Confusion Matrix - Run {i+1}\n")
                 cm_df.to_csv(f)
                 f.write("\n")  # Add a newline between matrices
+        f.close()
+        if i==6 :
+            mlflow.log_artifact(cm_csv_path)
+            mlflow.log_artifact(csv_path)
+            
     else :
         with open(cm_csv_path, "w") as f:
             for i, cm_df in enumerate(confusion_matrices):
@@ -357,15 +363,24 @@ def evalPerformance(classData, y_predict,n):
     # Compute average performance metrics
    
     with mlflow.start_run(run_id=run_id): 
-        avg_oa = np.mean(oa[:-1])
-        avg_aa = np.mean(aa[:-1])
-        avg_kappa = np.mean(kappa[:-1])
-        mlflow.log_metric("Final_OA", avg_oa)
-        mlflow.log_metric("Final_AA", avg_aa)
-        mlflow.log_metric("Final_KAPPA", avg_kappa)
-        mlflow.log_metric("all_OA", oa[-1])
-        mlflow.log_metric("all_OA", aa[-1])
-        mlflow.log_metric("all_KAPPA", kappa[-1])
+        if n==6:
+            avg_oa = np.mean(oa[:-1])
+            avg_aa = np.mean(aa[:-1])
+            avg_kappa = np.mean(kappa[:-1])
+            mlflow.log_metric("all_bands_OA", oa[-1])
+            mlflow.log_metric("all_bands_OA", aa[-1])
+            mlflow.log_metric("all_KAPPA", kappa[-1])
+        else:
+            avg_oa = np.mean(oa)
+            avg_aa = np.mean(aa)
+            avg_kappa = np.mean(kappa)
+            
+            
+    
+        mlflow.log_metric("ModelAvg_OA", avg_oa)
+        mlflow.log_metric("ModelAvg_AA", avg_aa)
+        mlflow.log_metric("FinalAvg_KAPPA", avg_kappa)
+        
         print(f"\nAverage Performance Over {n} Runs:")
         print(f"Overall Accuracy: {avg_oa:.4f}")
         print(f"Average Accuracy: {avg_aa:.4f}")
@@ -393,6 +408,9 @@ def evalPerformance(classData, y_predict,n):
         plt.show()
         plot_path = "performance_metrics.png"
         plt.savefig(plot_path)
+        mlflow.log_artifacts(plot_path)
+        
+        
         plt.close()  
     
 
