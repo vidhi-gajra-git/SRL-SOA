@@ -6,7 +6,7 @@ from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
 from self_onn import SparseAutoencoderNonLinear
-from multi_kernel_multi_layer import SparseAutoencoderNonLinear2 ,MultiKernel 
+from multi_kernel_multi_layer import SparseAutoencoderNonLinear2 ,MultiKernelEncoder 
 np.random.seed(42)
 tf.random.set_seed(42)
 
