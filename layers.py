@@ -14,7 +14,7 @@ class Oper1D(tf.keras.Model):
     for i in range(0, q):  # q convolutional layers.
       self.all_layers.append(tf.keras.layers.Conv1D(filters,
                                                     kernel_size,
-                                                    padding='same', activation=None))
+                                                    padding='same', activation=activation,  kernel_initializer=tf.keras.initializers.GlorotNormal() ))
   def get_hyperparameters(self):
         return {k: v for k, v in self.__dict__.items() if isinstance(v, (int, float, str, bool))}
 
