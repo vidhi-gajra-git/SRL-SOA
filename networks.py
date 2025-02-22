@@ -14,7 +14,7 @@ tf.random.set_seed(42)
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
   x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  model_name=f'Oper1D_q{q}_Xavier_tanh_inner'
+  model_name=f'Oper1D_q{q}'
   hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
