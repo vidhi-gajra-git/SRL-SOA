@@ -313,7 +313,7 @@ def reduce_bands(param, classData, Data, i):
                 all_bands=[i for i in range (len(indices))]
                 for band in all_bands:
                     band_presence.append(1 if band in ind_a else 0)
-                plotted_graph_path=plotBands(ind_a, xx,i, all_bands )
+                # plotted_graph_path=plotBands(ind_a, xx,i, all_bands )
                 mlflow.log_artifact(plotted_graph_path)
             
             # Create a DataFrame for the selected bands and their presence
