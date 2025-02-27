@@ -268,9 +268,9 @@ def reduce_bands(param, classData, Data, i):
                 # mlflow.log_param("Scikit-Learn Version", sklearn.__version__)
                 with open("run_id.txt", "w") as f:
                     f.write(parent_run_id)
-                model_json = model.to_json()
-                with open("model_architecture.json", "w") as json_file:
-                    json_file.write(model_json)
+                # model_json = model.to_json()
+                # with open("model_architecture.json", "w") as json_file:
+                #     json_file.write(model_json)
 
                 # Log model architecture
                 mlflow.log_artifact("model_architecture.json")
