@@ -75,7 +75,7 @@ def loadEvalData(dataset):
     gtd = np.array(gtd, dtype='float32')
 
     xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-    label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]])
+    label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
 
     x_class = xx[label != 0]
     y_class = label[label != 0]
@@ -287,7 +287,7 @@ def reduce_bands(param, classData, Data, i):
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
                 execution_time = round(time.time() - start_time, 2)  # Seconds
-                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/SRL-SOA_q1_run{i}.weights.h5") / (1024 ** 2), 2)
+                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/SRL-SOA_q3_run{i}.weights.h5") / (1024 ** 2), 2)
                 
                 
                 mlflow.tensorflow.log_model(model,model_name)
