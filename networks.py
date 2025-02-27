@@ -57,7 +57,7 @@ def SLRol(n_bands, q):
 #     decay_steps=10000,
 #     decay_rate=0.9
 # )
-  hyperparams = {
+  hyperparams2 = {
         "n_bands": n_bands,
         "q": q,
         "num_conv_layers": num_conv_layers,
@@ -69,10 +69,10 @@ def SLRol(n_bands, q):
         "decay_rate": 0.9,
         "sparsity_warmup_epochs": 10
     }
-  lr_schedule = WarmUpExponentialDecay(initial_lr=hyperparams["initial_lr"],
-                                         warmup_steps=hyperparams["warmup_steps"],
-                                         decay_steps=hyperparams["decay_steps"],
-                                         decay_rate=hyperparams["decay_rate"])
+  lr_schedule = WarmUpExponentialDecay(initial_lr=hyperparams2["initial_lr"],
+                                         warmup_steps=hyperparams2["warmup_steps"],
+                                         decay_steps=hyperparams2["decay_steps"],
+                                         decay_rate=hyperparams2["decay_rate"])
 
   optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule )
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
