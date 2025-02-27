@@ -10,7 +10,22 @@ from self_onn import SparseAutoencoderNonLinear
 from multi_layer_multi_kernel import SparseAutoencoderNonLinear2 ,MultiKernelEncoder 
 np.random.seed(42)
 tf.random.set_seed(42)
+class WarmUpExponentialDecay(tf.keras.optimizers.schedules.LearningRateSchedule):
+    def __init__(self, initial_lr, warmup_steps, decay_steps, decay_rate):
+        super(WarmUpExponentialDecay, self).__init__()
+        self.initial_lr = initial_lr
+        self.warmup_steps = warmup_steps
+        self.decay_steps = decay_steps
+        self.decay_rate = decay_rate
 
+    def __call__(self, step):
+        step = tf.cast(step, tf.float32)
+        warmup_steps = tf.cast(self.warmup_steps, tf.float32)
+        decay_steps = tf.cast(self.decay_steps, tf.float32)
+        lr = tf.cond(step < warmup_steps,
+                     lambda: self.initial_lr * (step / warmup_steps),
+                     lambda: self.initial_lr * self.decay_rate**((step - warmup_steps)/decay_steps))
+        return lr
 ### SLR-OL
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
@@ -42,8 +57,12 @@ def SLRol(n_bands, q):
 #     decay_steps=10000,
 #     decay_rate=0.9
 # )
+  lr_schedule = WarmUpExponentialDecay(initial_lr=hyperparams["initial_lr"],
+                                         warmup_steps=hyperparams["warmup_steps"],
+                                         decay_steps=hyperparams["decay_steps"],
+                                         decay_rate=hyperparams["decay_rate"])
 
-  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+  optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule )
   # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
