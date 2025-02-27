@@ -57,7 +57,7 @@ def SLRol(n_bands, q):
 #     decay_steps=10000,
 #     decay_rate=0.9
 # )
-   hyperparams = {
+  hyperparams = {
         "n_bands": n_bands,
         "q": q,
         "num_conv_layers": num_conv_layers,
