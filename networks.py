@@ -18,7 +18,7 @@ def SLRol(n_bands, q):
   # hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
-  num_conv_layers = 2 # Number of Conv1D layers per degree
+  num_conv_layers = 4 # Number of Conv1D layers per degree
   x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_60_Epochs'
   hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
