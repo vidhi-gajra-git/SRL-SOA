@@ -255,7 +255,7 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
-            mlflow.tensorflow.autolog()
+            # mlflow.tensorflow.autolog()
             run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
                 
