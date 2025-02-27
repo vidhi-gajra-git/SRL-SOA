@@ -36,7 +36,7 @@ def SLRol(n_bands, q):
   # q = 3    # Degree of non-linearity
   num_conv_layers = 4 # Number of Conv1D layers per degree
   x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
-  model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_60_Epochs'
+  model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_Learning_RateScehduled'
   hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
   # x_0=MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
@@ -57,6 +57,18 @@ def SLRol(n_bands, q):
 #     decay_steps=10000,
 #     decay_rate=0.9
 # )
+   hyperparams = {
+        "n_bands": n_bands,
+        "q": q,
+        "num_conv_layers": num_conv_layers,
+        "activation": "tanh",
+        "lambda_l1": 0.01,
+        "initial_lr": 0.001,
+        "warmup_steps": 1000,
+        "decay_steps": 10000,
+        "decay_rate": 0.9,
+        "sparsity_warmup_epochs": 10
+    }
   lr_schedule = WarmUpExponentialDecay(initial_lr=hyperparams["initial_lr"],
                                          warmup_steps=hyperparams["warmup_steps"],
                                          decay_steps=hyperparams["decay_steps"],
