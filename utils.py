@@ -218,7 +218,7 @@ def plotBands(selected_bands , data ,i, all_bands ):
     
     # Save and display the plot
     plot_path = "reflectance_distribution_(i).png"
-     plt.savefig(plot_path)
+    plt.savefig(plot_path)
     plt.show()
     
     plt.close()
