@@ -193,20 +193,20 @@ def loadData(dataset):
 def plotBands(selected_bands , data ,i, all_bands ):
     mean_reflectance = np.mean(data, axis=0)
     std_reflectance = np.std(data, axis=0)
-    selected_bands = all_bands[selected_bands]
+    
 
 # Define spread regions (like probability distributions)
     upper_bound = mean_reflectance + std_reflectance
     lower_bound = mean_reflectance - std_reflectance
 
     plt.figure(figsize=(10, 5))
-    plt.plot(bands, mean_reflectance, label="Mean Reflectance", color="blue", linewidth=2)
-    plt.fill_between(bands, lower_bound, upper_bound, color="grey", alpha=0.2, label="±1 Std Dev")
+    plt.plot(all_bands, mean_reflectance, label="Mean Reflectance", color="blue", linewidth=2)
+    plt.fill_between(all_bands, lower_bound, upper_bound, color="grey", alpha=0.2, label="±1 Std Dev")
     
     # Add vertical dashed lines & annotate selected bands
     for idx, sb in enumerate(selected_bands):
         plt.axvline(sb, color="red", linestyle="dashed", linewidth=1)
-        plt.text(sb, upper_bound.max(), f"Band {selected_band_indices[idx]}", 
+        plt.text(sb, upper_bound.max(), f"Band {sb}", 
                  color="red", fontsize=10, rotation=0, ha="center", va="bottom", fontweight="bold")
     
     # Formatting
