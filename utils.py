@@ -273,7 +273,7 @@ def reduce_bands(param, classData, Data, i):
                 #     json_file.write(model_json)
 
                 # Log model architecture
-                mlflow.log_artifact("model_architecture.json")
+                # mlflow.log_artifact("model_architecture.json")
             
                 # Log custom hyperparameters
                 mlflow.log_params(hyperparams)
