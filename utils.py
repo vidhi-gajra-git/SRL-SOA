@@ -190,7 +190,40 @@ def loadData(dataset):
     print('\nNumber of bands: ', str(classData['x_train'].shape[-1]))
 
     return classDataa, Dataa
+def plotBands(selected_bands , data ,i, all_bands ):
+    mean_reflectance = np.mean(sdata, axis=0)
+    std_reflectance = np.std(data, axis=0)
+    selected_bands = all_bands[selected_bands]
 
+# Define spread regions (like probability distributions)
+    upper_bound = mean_reflectance + std_reflectance
+    lower_bound = mean_reflectance - std_reflectance
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(bands, mean_reflectance, label="Mean Reflectance", color="blue", linewidth=2)
+    plt.fill_between(bands, lower_bound, upper_bound, color="grey", alpha=0.2, label="±1 Std Dev")
+    
+    # Add vertical dashed lines & annotate selected bands
+    for idx, sb in enumerate(selected_bands):
+        plt.axvline(sb, color="red", linestyle="dashed", linewidth=1)
+        plt.text(sb, upper_bound.max(), f"Band {selected_band_indices[idx]}", 
+                 color="red", fontsize=10, rotation=0, ha="center", va="bottom", fontweight="bold")
+    
+    # Formatting
+    plt.xlabel("Wavelength (nm)")
+    plt.ylabel("Reflectance")
+    plt.title("Spectral Band Reflectance Distribution")
+    plt.legend()
+    plt.grid(True, linestyle="--", alpha=0.5)
+    
+    # Save and display the plot
+    plot_path = "reflectance_distribution_(i).png"
+     plt.savefig(plot_path)
+    plt.show()
+    
+    plt.close()
+    return plot_path 
+   
 
 def reduce_bands(param, classData, Data, i):
     modelType = param['modelType']
@@ -280,6 +313,7 @@ def reduce_bands(param, classData, Data, i):
         all_bands=[i for i in range (len(indices))]
         for band in all_bands:
             band_presence.append(1 if band in ind_a else 0)
+        mlflow.log_artifact(plotBands(ind_a, xx,i, all_bands ))
     
     # Create a DataFrame for the selected bands and their presence
         df_bands = pd.DataFrame([band_presence], columns=all_bands)
@@ -290,13 +324,13 @@ def reduce_bands(param, classData, Data, i):
                     # f.write(f"Selected_bands - Run {i+1}\n")
                     # f.write(str(all_bands[:]))
                     df_bands.to_csv(f)
-                    f.write("\n")  # Add a newline between matrices
+                    # f.write("\n")  # Add a newline between matrices
         else :
             with open( csv_file_path, "w") as f:
-                f.write(f"Selected_bands - Run {i+1}\n")
+                # f.write(f"Selected_bands - Run {i+1}\n")
                 f.write(str(all_bands[:]))
                 df_bands.to_csv(f)
-                f.write("\n")
+                # f.write("\n")
 
         classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
         classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
@@ -482,27 +516,52 @@ def evalPerformance(classData, y_predict,n):
     
         x_labels = [f"Run {i+1}" for i in range(n)]
         width = 0.2  # Bar width
-    
-        plt.bar(np.arange(n), oa, width=width, label="Overall Accuracy", color="blue")
-        plt.bar(np.arange(n) + width, aa, width=width, label="Average Accuracy", color="green")
-        plt.bar(np.arange(n) + 2 * width, kappa, width=width, label="Kappa Coefficient", color="red")
+
+
+
+# Plot lines with markers
+        plt.plot(np.arange(n), oa, marker="o", linestyle="-", color="blue", label="Overall Accuracy")
+        plt.plot(np.arange(n), aa, marker="s", linestyle="-", color="green", label="Average Accuracy")
+        plt.plot(np.arange(n), kappa, marker="^", linestyle="-", color="red", label="Kappa Coefficient")
         
-        plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1, label="Avg OA")
-        plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1, label="Avg AA")
-        plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1, label="Avg Kappa")
-    
-        plt.xticks(np.arange(n) + width, x_labels)
+        # Annotate each point with its value
+        for i in range(n):
+            plt.text(i, oa[i], f"{oa[i]:.2f}", ha="center", va="bottom", fontsize=10, color="blue")
+            plt.text(i, aa[i], f"{aa[i]:.2f}", ha="center", va="bottom", fontsize=10, color="green")
+            plt.text(i, kappa[i], f"{kappa[i]:.2f}", ha="center", va="bottom", fontsize=10, color="red")
+        
+        # Add dashed horizontal lines for averages
+        plt.axhline(avg_oa, color="blue", linestyle="dashed", linewidth=1)
+        plt.axhline(avg_aa, color="green", linestyle="dashed", linewidth=1)
+        plt.axhline(avg_kappa, color="red", linestyle="dashed", linewidth=1)
+        
+        # Annotate the average lines
+        plt.text(n - 1, avg_oa, f"Avg OA: {avg_oa:.2f}", color="blue", va="bottom", ha="right", fontsize=10)
+        plt.text(n - 1, avg_aa, f"Avg AA: {avg_aa:.2f}", color="green", va="bottom", ha="right", fontsize=10)
+        plt.text(n - 1, avg_kappa, f"Avg Kappa: {avg_kappa:.2f}", color="red", va="bottom", ha="right", fontsize=10)
+        
+        # Formatting
+        plt.xticks(np.arange(n), x_labels)
         plt.ylabel("Score")
         plt.title("Performance Metrics Across Runs")
         plt.legend()
-        plt.show()
+        plt.grid(True, linestyle="--", alpha=0.5)
+        
+        # Save and log the plot
         plot_path = "performance_metrics.png"
+        plt.savefig(plot_path)
         plt.savefig(plot_path)
         mlflow.log_artifacts(plot_path)
         
+        plt.show()
         
-        plt.close()  
-    
+        plt.close()
+        
 
+
+
+        
+    
+       
     # display(plt.gcf())  # Explicitly display the figure
   # Close the figure to prevent file access issues
