@@ -255,7 +255,7 @@ def reduce_bands(param, classData, Data, i):
         callbacks_osen = [checkpoint_osen]
 
         if weights == 'False':
-            # mlflow.tensorflow.autolog()
+            mlflow.tensorflow.autolog()
             run_name = f"{model_name}_run{i}"
             with mlflow.start_run(run_name=run_name) as parent_run:
                 
@@ -293,47 +293,47 @@ def reduce_bands(param, classData, Data, i):
                 mlflow.tensorflow.log_model(model,model_name)
                 mlflow.log_metric("Execution_Time_seconds", execution_time)
                 mlflow.log_param("Model_Size_MB", model_size)
-            print(modelType + ' is trained!')
+                print(modelType + ' is trained!')
             
 
-        intermediate_layer_model = tf.keras.Model(inputs = model.input,
-                                        outputs = model.layers[1].output)
-        A = intermediate_layer_model(classData['x_train'])
-
-        A = np.abs(A)
-        A = np.mean(A, axis = 0)
-        A = np.sum(A, axis = 0)
-        indices = np.argsort(A)
-        ind_a=indices[-s_bands::]
-        df_bands = pd.DataFrame(ind_a, columns=["Selected_Bands"])
-        csv_file_path = "results/selected_bands.csv"
+                intermediate_layer_model = tf.keras.Model(inputs = model.input,
+                                                outputs = model.layers[1].output)
+                A = intermediate_layer_model(classData['x_train'])
         
-        # Check if the file exists
-        band_presence = []
-        all_bands=[i for i in range (len(indices))]
-        for band in all_bands:
-            band_presence.append(1 if band in ind_a else 0)
-        mlflow.log_artifact(plotBands(ind_a, xx,i, all_bands ))
-    
-    # Create a DataFrame for the selected bands and their presence
-        df_bands = pd.DataFrame([band_presence], columns=all_bands)
-        # df_bands.to_csv()
-        if os.path.exists( csv_file_path):
-            with open(csv_file_path, "a") as f:
-                # for i, cm_df in enumerate(confusion_matrices):
-                    # f.write(f"Selected_bands - Run {i+1}\n")
-                    # f.write(str(all_bands[:]))
-                    df_bands.to_csv(f)
-                    # f.write("\n")  # Add a newline between matrices
-        else :
-            with open( csv_file_path, "w") as f:
-                # f.write(f"Selected_bands - Run {i+1}\n")
-                f.write(str(all_bands[:]))
-                df_bands.to_csv(f)
-                # f.write("\n")
-
-        classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
-        classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
+                A = np.abs(A)
+                A = np.mean(A, axis = 0)
+                A = np.sum(A, axis = 0)
+                indices = np.argsort(A)
+                ind_a=indices[-s_bands::]
+                df_bands = pd.DataFrame(ind_a, columns=["Selected_Bands"])
+                csv_file_path = "results/selected_bands.csv"
+                
+                # Check if the file exists
+                band_presence = []
+                all_bands=[i for i in range (len(indices))]
+                for band in all_bands:
+                    band_presence.append(1 if band in ind_a else 0)
+                mlflow.log_artifact(plotBands(ind_a, xx,i, all_bands ))
+            
+            # Create a DataFrame for the selected bands and their presence
+                df_bands = pd.DataFrame([band_presence], columns=all_bands)
+                # df_bands.to_csv()
+                if os.path.exists( csv_file_path):
+                    with open(csv_file_path, "a") as f:
+                        # for i, cm_df in enumerate(confusion_matrices):
+                            # f.write(f"Selected_bands - Run {i+1}\n")
+                            # f.write(str(all_bands[:]))
+                            df_bands.to_csv(f)
+                            # f.write("\n")  # Add a newline between matrices
+                else :
+                    with open( csv_file_path, "w") as f:
+                        # f.write(f"Selected_bands - Run {i+1}\n")
+                        f.write(str(all_bands[:]))
+                        df_bands.to_csv(f)
+                        # f.write("\n")
+        
+                classData['x_train'] = classData['x_train'][:, indices[-s_bands::]]
+                classData['x_test'] = classData['x_test'][:, indices[-s_bands::]]
 
     elif modelType == 'PCA':
         pca = PCA(n_components = s_bands, random_state = 1)
