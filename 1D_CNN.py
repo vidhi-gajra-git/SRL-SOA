@@ -14,6 +14,7 @@ from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping
 from tensorflow.keras.callbacks import TensorBoard
 from kerastuner import RandomSearch, Hyperband, BayesianOptimization
 from time import time
+import matplotlib.pyplot as plt 
 
 #debug
 import sys
