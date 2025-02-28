@@ -58,23 +58,23 @@ else:
 # #      nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata = load_train(train_filename, train_labels_filename, args.nosplit)
  # nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata
 classData , data = loadEvalData(vars(args)['dataset'])
-X_train=classData[0]['x_train']
-X_test=classData[0]['x_test']
+X_train_np=classData[0]['x_train']
+X_test_np=classData[0]['x_test']
 y_train=classData[0]['y_train']
 y_test=classData[0]['y_test']
 nbands=X_train.shape[1]
 print('X_train shape = ', X_train.shape)
 print('X_test shape = ', X_test.shape)
 
-n_train_samples = X_train.shape[0]
-print(n_train_samples, 'train samples')
-n_test_samples = X_test.shape[0]
-print(n_test_samples, 'test samples')
+# n_train_samples = X_train.shape[0]
+# print(n_train_samples, 'train samples')
+# n_test_samples = X_test.shape[0]
+# print(n_test_samples, 'test samples')
 
-X_train_np = X_train.to_numpy()
+# X_train_np = X_train
 # X_train_np = X_train_np.reshape((X_train_np.shape[0],X_train_np.shape[1],1))
 print('X_train_np.shape = ', X_train_np.shape)
-X_test_np = X_test.to_numpy()
+# X_test_np = X_test
 # X_test_np = X_test_np.reshape((X_test_np.shape[0],X_test_np.shape[1],1))
 print('X_test_np.shape = ', X_test_np.shape)
 # print('zerodata.shape = ', zerodata.shape)
@@ -84,8 +84,8 @@ n1 = nbands
 # number of outputs (classes) with additional zero class (not used for train)
 num_classes = np.max(y_train) + 1
 
-y_train = to_categorical(y_train.to_numpy(), num_classes)
-y_test = to_categorical(y_test.to_numpy(), num_classes)
+y_train = to_categorical(y_train, num_classes)
+y_test = to_categorical(y_test, num_classes)
 
 if args.tuner:
      # tune model1
