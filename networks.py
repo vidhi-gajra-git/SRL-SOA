@@ -50,7 +50,7 @@ def SLRol(n_bands, q):
   class_preds = guiding_classifier(y)
 
 # Define the combined model
-  combined_model = tf.keras.Model(inputs=inputs, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
+  combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
   model_name=f'CombinedModel{q}_layers{num_conv_layers}_Xavier'
   
 
