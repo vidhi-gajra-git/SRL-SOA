@@ -237,6 +237,7 @@ def reduce_bands(param, classData, Data, i):
     ind_a=None
 
     n_bands = classData['x_train'].shape[-1]
+    y_train=classData['y_train']
 
     if dataset != 'SalinasA_corrected': xx = classData['x_train']
     else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
@@ -283,7 +284,12 @@ def reduce_bands(param, classData, Data, i):
                 # mlflow.log_param("activation", activation)
                 # mlflow.log_param("lambda_l1", lambda_l1)
                 start_time=time.time()
-                model.fit(xx, xx, batch_size = batchSize,
+                if model_name='':
+                    model.fit(xx, [xx, y_train], batch_size = batchSize,
+                        callbacks=callbacks_osen, shuffle=True,
+                        validation_data=(xx, [xx,y_train]), epochs = epochs)
+                else:
+                    model.fit(xx, xx, batch_size = batchSize,
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
                 execution_time = round(time.time() - start_time, 2)  # Seconds
