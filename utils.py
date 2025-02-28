@@ -292,7 +292,7 @@ def reduce_bands(param, classData, Data, i):
                 # mlflow.log_param("activation", activation)
                 # mlflow.log_param("lambda_l1", lambda_l1)
                 start_time=time.time()
-                if model_name==f'CombinedModel{q}_layers2_Xavier':
+                if 'CombinedModel' in model_name:
                     model.fit(xx, [xx, y_train], batch_size = batchSize,
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, [xx,y_train]), epochs = epochs)
