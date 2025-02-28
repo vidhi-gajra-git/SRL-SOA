@@ -134,10 +134,11 @@ model = model1(n1,num_classes)
 print(model.summary())
 
 # load model
-if vars(args)["checkpoint"] is not None:
-     model_to_load = vars(args)['checkpoint']
-else:
-     model_to_load = 'model_to_load'
+# if vars(args)["checkpoint"] is not None:
+#      model_to_load = vars(args)['checkpoint']
+# else:
+#      model_to_load = 'model_to_load'
+ model_to_load = 'model_to_load'
 
 if os.path.exists(model_to_load):
      print(model_to_load,' loaded')
