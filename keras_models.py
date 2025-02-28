@@ -42,5 +42,5 @@ from tensorflow.keras.optimizers import Adam,Adadelta,RMSprop,SGD
 # opt = Adam(lr=INIT_LR, beta_1=0.9, beta_2=0.999, epsilon=None, decay=decay, amsgrad=False)
 # opt = Adadelta(lr=INIT_LR, rho=0.95, epsilon=None, decay=decay)
 # opt = RMSprop(INIT_LR, rho=0.9, epsilon=None, decay=0.0)
-opt = SGD(lr=INIT_LR,momentum=0.9,decay=decay,nesterov=False)
+opt = SGD(learning_rate=INIT_LR,momentum=0.9,decay=decay,nesterov=False)
 
