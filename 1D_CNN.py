@@ -63,8 +63,8 @@ X_test_np=classData[0]['x_test']
 y_train=classData[0]['y_train']
 y_test=classData[0]['y_test']
 nbands=X_train_np.shape[1]
-print('X_train shape = ', X_train.shape)
-print('X_test shape = ', X_test.shape)
+# print('X_train shape = ', X_train.shape)
+# print('X_test shape = ', X_test.shape)
 
 # n_train_samples = X_train.shape[0]
 # print(n_train_samples, 'train samples')
