@@ -185,8 +185,8 @@ for i,p in enumerate(preds_train):
      trainList0.append(np.argmax(y_train[i]))
      trainList.append(np.argmax(p))
 # add 'labels' column
-X_train['labels0'] = trainList0
-X_train['labels'] = trainList
+# X_train['labels0'] = trainList0
+# X_train['labels'] = trainList
 
 # if X_test_np.shape[0] > 0:
 #      preds_test = model.predict_prob(X_test_np)
@@ -243,6 +243,6 @@ plt.title('Training and Validation Loss')
 plt.show()
 
 # Evaluate the model
-loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+loss, accuracy = model.evaluate(X_test_np, y_test, verbose=0)
 print(f"Test Accuracy: {accuracy:.4f}")
 
