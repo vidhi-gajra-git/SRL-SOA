@@ -178,7 +178,7 @@ if X_test_np.shape[0] > 0:
      print('Test loss:', score_test[0])
      print('Test accuracy:', score_test[1])
 
-preds_train = model.predict_proba(X_train_np)
+preds_train = model.predict(X_train_np)
 trainList0 = []
 trainList = []
 for i,p in enumerate(preds_train):
