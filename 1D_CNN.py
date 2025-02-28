@@ -146,7 +146,7 @@ if os.path.exists(model_to_load):
 
 callbacks_list = [
     ModelCheckpoint(
-        filepath='best_model.{epoch:02d}-{val_loss:.2f}.h5',
+        filepath='weights/best_model.{epoch:02d}-{val_loss:.2f}.h5',
         monitor='accuracy', save_best_only=True),
         EarlyStopping(monitor='accuracy', patience=100),
         TensorBoard(log_dir="logs/{}".format(time()))
@@ -167,7 +167,7 @@ save_train_history(history.history,'train_history.mat')
 save_train_history(history.history,'train_history.txt')
 
 # save model with weights
-model.save('output/1dcnn.h5')
+model.save('guiding_model.h5')
 
 score_train = model.evaluate(X_train_np, y_train, verbose=1)
 print('Train loss:', score_train[0])
