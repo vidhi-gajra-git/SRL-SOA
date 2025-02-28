@@ -10,22 +10,8 @@ from self_onn import SparseAutoencoderNonLinear
 from multi_layer_multi_kernel import SparseAutoencoderNonLinear2 ,MultiKernelEncoder 
 np.random.seed(42)
 tf.random.set_seed(42)
-class WarmUpExponentialDecay(tf.keras.optimizers.schedules.LearningRateSchedule):
-    def __init__(self, initial_lr, warmup_steps, decay_steps, decay_rate):
-        super(WarmUpExponentialDecay, self).__init__()
-        self.initial_lr = initial_lr
-        self.warmup_steps = warmup_steps
-        self.decay_steps = decay_steps
-        self.decay_rate = decay_rate
 
-    def __call__(self, step):
-        step = tf.cast(step, tf.float32)
-        warmup_steps = tf.cast(self.warmup_steps, tf.float32)
-        decay_steps = tf.cast(self.decay_steps, tf.float32)
-        lr = tf.cond(step < warmup_steps,
-                     lambda: self.initial_lr * (step / warmup_steps),
-                     lambda: self.initial_lr * self.decay_rate**((step - warmup_steps)/decay_steps))
-        return lr
+
 ### SLR-OL
 def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
@@ -65,7 +51,7 @@ def SLRol(n_bands, q):
 
 # Define the combined model
   combined_model = tf.keras.Model(inputs=inputs, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'SCombinedModel{q}_layers{num_conv_layers}_Xavier'
+  model_name=f'CombinedModel{q}_layers{num_conv_layers}_Xavier'
   
 
 # Compile the model
@@ -101,6 +87,6 @@ def SLRol(n_bands, q):
 
   # model.compile(optimizer = optimizer, loss = 'mse')
 
-  model.summary()
+  combined_model.summary()
     
   return model_name, hyperparams , combined_model
