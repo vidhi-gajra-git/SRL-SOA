@@ -62,7 +62,7 @@ X_train_np=classData[0]['x_train']
 X_test_np=classData[0]['x_test']
 y_train=classData[0]['y_train']
 y_test=classData[0]['y_test']
-nbands=X_train.shape[1]
+nbands=X_train_np.shape[1]
 print('X_train shape = ', X_train.shape)
 print('X_test shape = ', X_test.shape)
 
