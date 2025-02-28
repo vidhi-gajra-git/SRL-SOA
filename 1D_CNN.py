@@ -15,6 +15,8 @@ from tensorflow.keras.callbacks import TensorBoard
 from kerastuner import RandomSearch, Hyperband, BayesianOptimization
 from time import time
 import matplotlib.pyplot as plt 
+import warnings
+warnings.filterwarnings('ignore')
 
 #debug
 import sys
@@ -161,7 +163,7 @@ history = model.fit(X_train_np,
                     epochs=epochs,
                     callbacks=callbacks_list,
                     validation_split=validation_split,
-                    verbose=0)
+                    verbose=1)
 
 save_train_history(history.history,'train_history.csv')
 save_train_history(history.history,'train_history.mat')
