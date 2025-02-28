@@ -82,10 +82,10 @@ print('X_test_np.shape = ', X_test_np.shape)
 # number of inputs
 n1 = nbands
 # number of outputs (classes) with additional zero class (not used for train)
-num_classes = np.max(y_train) + 1
+num_classes = int (np.max(y_train) + 1)
 
-y_train = to_categorical(y_train, int(num_classes))
-y_test = to_categorical(y_test, int(num_classes))
+y_train = to_categorical(y_train, num_classes)
+y_test = to_categorical(y_test, num_classes)
 
 if args.tuner:
      # tune model1
