@@ -496,8 +496,8 @@ def evalPerformance(classData, y_predict,n):
     print(f"Confusion matrices saved to: {cm_csv_path}")
 
     # Print Results Table
-    print("\nPerformance Metrics Summary:")
-    display(df_results)  # Use display() to properly render the table
+    # print("\nPerformance Metrics Summary:")
+    # display(df_results)  # Use display() to properly render the table
 
     # Compute average performance metrics
    
@@ -565,7 +565,7 @@ def evalPerformance(classData, y_predict,n):
         # Save and log the plot
         plot_path = "performance_metrics.png"
         plt.savefig(plot_path)
-        plt.savefig(plot_path)
+        # plt.savefig(plot_path)
         mlflow.log_artifacts(plot_path)
         
         plt.show()
