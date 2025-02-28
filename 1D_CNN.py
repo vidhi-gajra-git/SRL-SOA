@@ -188,16 +188,16 @@ for i,p in enumerate(preds_train):
 X_train['labels0'] = trainList0
 X_train['labels'] = trainList
 
-if X_test_np.shape[0] > 0:
-     preds_test = model.predict_proba(X_test_np)
-     testList0 = []
-     testList = []
-     for i,p in enumerate(preds_test):
-          testList0.append(np.argmax(y_test[i]))
-          testList.append(np.argmax(p))
-     # add 'labels' column
-     X_test['labels0'] = testList0
-     X_test['labels'] = testList
+# if X_test_np.shape[0] > 0:
+#      preds_test = model.predict_prob(X_test_np)
+#      testList0 = []
+#      testList = []
+#      for i,p in enumerate(preds_test):
+#           testList0.append(np.argmax(y_test[i]))
+#           testList.append(np.argmax(p))
+#      # add 'labels' column
+#      X_test['labels0'] = testList0
+#      X_test['labels'] = testList
 
 # if args.nosplit:
 #      alldata = pd.concat([X_test, zerodata])
