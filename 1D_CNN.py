@@ -161,7 +161,7 @@ history = model.fit(X_train_np,
                     epochs=epochs,
                     callbacks=callbacks_list,
                     validation_split=validation_split,
-                    verbose=2)
+                    verbose=0)
 
 save_train_history(history.history,'train_history.csv')
 save_train_history(history.history,'train_history.mat')
