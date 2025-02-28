@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import string
 import os
-
+from utils import loadEvalData 
 from hsi_io import load_train,load_train_test,export_labels,save_train_history
 from variables import *
 from keras_models import *
@@ -21,24 +21,48 @@ import pdb
 
 from argparse import ArgumentParser
 parser = ArgumentParser()
-parser.add_argument("--tr", dest="train", required = True, default = "salinas.txt.zip", help="read train set from FILE", metavar="TRAIN_SET_FILE")
-parser.add_argument("--te", dest="test", required = False, help="read test set from FILE", metavar="TEST_SET_FILE")
-parser.add_argument("--trlabels", dest="train_labels", required = True, default = "salinas_labels.txt.zip", help="read train labels from FILE", metavar="TRAIN_LABELS_FILE")
-parser.add_argument("--telabels", dest="test_labels", required = False, help="read test labels from FILE", metavar="TEST_LABELS_FILE")
-parser.add_argument("-m", "--model", dest="checkpoint", required = False, help="read model with weights from FILE", metavar="MODEL_FILE")
-parser.add_argument("--tuner", dest='tuner', action='store_true', help="activate tuner mode.")
-parser.add_argument("--nosplit", dest='nosplit', action='store_true', help="use only train set without test")
+parser.add_argument("--dataset", dest="dataset", required = True, default = "salinas.txt.zip", help="Available 1]Indian 2]SalinasA ")
+# parser.add_argument("--te", dest="test", required = False, help="read test set from FILE", metavar="TEST_SET_FILE")
+# parser.add_argument("--trlabels", dest="train_labels", required = True, default = "salinas_labels.txt.zip", help="read train labels from FILE", metavar="TRAIN_LABELS_FILE")
+# parser.add_argument("--telabels", dest="test_labels", required = False, help="read test labels from FILE", metavar="TEST_LABELS_FILE")
+# parser.add_argument("-m", "--model", dest="checkpoint", required = False, help="read model with weights from FILE", metavar="MODEL_FILE")
+# parser.add_argument("--tuner", dest='tuner', action='store_true', help="activate tuner mode.")
+# parser.add_argument("--nosplit", dest='nosplit', action='store_true', help="use only train set without test")
 args = parser.parse_args()
-
-train_filename = vars(args)['train']
-train_labels_filename = vars(args)['train_labels']
-if vars(args)["test"] is not None:
-     test_filename = vars(args)['test']
-     test_labels_filename = vars(args)['test_labels']
-     nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata = load_train_test(train_filename, train_labels_filename, test_filename, test_labels_filename)
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+    print("$"*10,"GPUs Available:", tf.config.list_physical_devices('GPU'),"$"*10)
+    try:
+        for gpu in gpus:
+            
+            tf.config.experimental.set_memory_growth(gpu, True)
+        print("GPU is configured for TensorFlow!")
+    except RuntimeError as e:
+        print(e)
 else:
-     nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata = load_train(train_filename, train_labels_filename, args.nosplit)
+    print("No GPU found, running on CPU.")
 
+
+
+# tf.config.set_visible_devices(tf.config.list_physical_devices('GPU')[0], 'GPU')
+
+# Allow TensorFlow to dynamically allocate GPU memory
+tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('GPU')[0], True)
+# train_filename = vars(args)['train']
+# train_labels_filename = vars(args)['train_labels']
+# # if vars(args)["test"] is not None:
+#      test_filename = vars(args)['test']
+#      test_labels_filename = vars(args)['test_labels']
+    
+# # else:
+# #      nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata = load_train(train_filename, train_labels_filename, args.nosplit)
+ # nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata
+classData , data = loadEvalData(vars(args)['dataset'])
+X_train=classData[0]['x_train']
+X_test=classData[0]['x_test']
+y_train=classData[0]['y_train']
+y_test=classData[0]['y_test']
+nbands=X_train.shape[1]
 print('X_train shape = ', X_train.shape)
 print('X_test shape = ', X_test.shape)
 
@@ -48,12 +72,12 @@ n_test_samples = X_test.shape[0]
 print(n_test_samples, 'test samples')
 
 X_train_np = X_train.to_numpy()
-X_train_np = X_train_np.reshape((X_train_np.shape[0],X_train_np.shape[1],1))
+# X_train_np = X_train_np.reshape((X_train_np.shape[0],X_train_np.shape[1],1))
 print('X_train_np.shape = ', X_train_np.shape)
 X_test_np = X_test.to_numpy()
-X_test_np = X_test_np.reshape((X_test_np.shape[0],X_test_np.shape[1],1))
+# X_test_np = X_test_np.reshape((X_test_np.shape[0],X_test_np.shape[1],1))
 print('X_test_np.shape = ', X_test_np.shape)
-print('zerodata.shape = ', zerodata.shape)
+# print('zerodata.shape = ', zerodata.shape)
 
 # number of inputs
 n1 = nbands
@@ -142,7 +166,7 @@ save_train_history(history.history,'output/train_history.mat')
 save_train_history(history.history,'output/train_history.txt')
 
 # save model with weights
-model.save('output/my_model.h5')
+model.save('output/1dcnn.h5')
 
 score_train = model.evaluate(X_train_np, y_train, verbose=1)
 print('Train loss:', score_train[0])
@@ -174,24 +198,50 @@ if X_test_np.shape[0] > 0:
      X_test['labels0'] = testList0
      X_test['labels'] = testList
 
-if args.nosplit:
-     alldata = pd.concat([X_test, zerodata])
-else:
-     alldata = pd.concat([X_train, X_test, zerodata])
+# if args.nosplit:
+#      alldata = pd.concat([X_test, zerodata])
+# else:
+#      alldata = pd.concat([X_train, X_test, zerodata])
 
-# sort by index for correct representation as image
-alldata.sort_index(inplace=True)
+# # sort by index for correct representation as image
+# alldata.sort_index(inplace=True)
 
-print()
-print('X_train.shape = ',X_train.shape)
-print('X_test.shape = ',X_test.shape)
-print('zerodata.shape = ',zerodata.shape)
-print('alldata.shape = ',alldata.shape)
-print('num_classes = ',num_classes)
+# print()
+# print('X_train.shape = ',X_train.shape)
+# print('X_test.shape = ',X_test.shape)
+# print('zerodata.shape = ',zerodata.shape)
+# print('alldata.shape = ',alldata.shape)
+# print('num_classes = ',num_classes)
 
-datalabels = alldata['labels'].to_numpy()
-try:
-     datalabels = datalabels.reshape(nrows_image,ncols_image)
-     export_labels('datalabels.txt',datalabels)
-except:
-     print("Can't reshape array according to",(nrows_image,ncols_image))
+# datalabels = alldata['labels'].to_numpy()
+# try:
+#      datalabels = datalabels.reshape(nrows_image,ncols_image)
+#      export_labels('datalabels.txt',datalabels)
+# except:
+#      print("Can't reshape array according to",(nrows_image,ncols_image))
+plt.figure(figsize=(12, 5))
+
+# Plot accuracy
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Val Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.title('Training and Validation Accuracy')
+
+# Plot loss
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Val Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.title('Training and Validation Loss')
+
+plt.show()
+
+# Evaluate the model
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Accuracy: {accuracy:.4f}")
+
