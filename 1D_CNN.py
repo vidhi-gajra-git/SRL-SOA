@@ -47,7 +47,7 @@ else:
 # tf.config.set_visible_devices(tf.config.list_physical_devices('GPU')[0], 'GPU')
 
 # Allow TensorFlow to dynamically allocate GPU memory
-tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('GPU')[0], True)
+# tf.config.experimental.set_memory_growth(tf.config.list_physical_devices('GPU')[0], True)
 # train_filename = vars(args)['train']
 # train_labels_filename = vars(args)['train_labels']
 # # if vars(args)["test"] is not None:
