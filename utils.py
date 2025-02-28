@@ -21,6 +21,8 @@ import dagshub
 import matplotlib 
 import time
 import psutil
+from tensorflow.keras.utils import to_categorical
+
 # import platform
 
 # %matplotlib inline
