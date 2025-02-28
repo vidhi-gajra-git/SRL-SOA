@@ -269,7 +269,7 @@ def save_train_history(hist_dict, filename):
      """ save train history"""
      hist_df = pd.DataFrame(hist_dict)
      if extension(filename) == 'csv':
-          with open(filename, 'w') as f:
+          with open(filename, 'w+') as f:
                hist_df.to_csv(f, sep='\t')
      elif extension(filename) == 'mat':
           savemat(filename, {
@@ -279,6 +279,6 @@ def save_train_history(hist_dict, filename):
                'val_accuracy': hist_df['val_accuracy'].to_numpy()
           })
      elif extension(filename) == 'txt':
-          with open(filename, 'w') as f:
+          with open(filename, 'w+') as f:
                f.write("loss\taccuracy\tval_loss\tval_accuracy\n")
                np.savetxt(f, hist_df.to_numpy(), delimiter='\t')
