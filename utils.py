@@ -245,8 +245,9 @@ def reduce_bands(param, classData, Data, i):
     if modelType == 'SRL-SOA':
         weightsDir = 'weights/' + dataset + '/'
         if not os.path.exists(weightsDir): os.makedirs(weightsDir)
-        weightName = weightsDir + modelType + '_q' + str(q) + '_run' + str(i) + '.weights.h5'
         model_name , hyperparams ,  model = networks.SLRol(n_bands = n_bands, q = q)
+        
+        weightName = weightsDir + model_name + '_run' + str(i) + '.weights.h5'
         
 
         checkpoint_osen = tf.keras.callbacks.ModelCheckpoint(
@@ -284,7 +285,7 @@ def reduce_bands(param, classData, Data, i):
                 # mlflow.log_param("activation", activation)
                 # mlflow.log_param("lambda_l1", lambda_l1)
                 start_time=time.time()
-                if model_name='':
+                if model_name==f'CombinedModel{q}_layers2_Xavier':
                     model.fit(xx, [xx, y_train], batch_size = batchSize,
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, [xx,y_train]), epochs = epochs)
@@ -293,7 +294,7 @@ def reduce_bands(param, classData, Data, i):
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
                 execution_time = round(time.time() - start_time, 2)  # Seconds
-                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/SRL-SOA_q3_run{i}.weights.h5") / (1024 ** 2), 2)
+                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/{model_name}_run{i}.weights.h5") / (1024 ** 2), 2)
                 
                 
                 mlflow.tensorflow.log_model(model,model_name)
