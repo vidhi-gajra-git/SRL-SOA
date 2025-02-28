@@ -162,9 +162,9 @@ history = model.fit(X_train_np,
                     validation_split=validation_split,
                     verbose=2)
 
-save_train_history(history.history,'output/train_history.csv')
-save_train_history(history.history,'output/train_history.mat')
-save_train_history(history.history,'output/train_history.txt')
+save_train_history(history.history,'train_history.csv')
+save_train_history(history.history,'train_history.mat')
+save_train_history(history.history,'train_history.txt')
 
 # save model with weights
 model.save('output/1dcnn.h5')
