@@ -26,7 +26,7 @@ parser.add_argument("--dataset", dest="dataset", required = True, default = "sal
 # parser.add_argument("--trlabels", dest="train_labels", required = True, default = "salinas_labels.txt.zip", help="read train labels from FILE", metavar="TRAIN_LABELS_FILE")
 # parser.add_argument("--telabels", dest="test_labels", required = False, help="read test labels from FILE", metavar="TEST_LABELS_FILE")
 # parser.add_argument("-m", "--model", dest="checkpoint", required = False, help="read model with weights from FILE", metavar="MODEL_FILE")
-# parser.add_argument("--tuner", dest='tuner', action='store_true', help="activate tuner mode.")
+parser.add_argument("--tuner", dest='tuner', action='store_true', help="activate tuner mode.")
 # parser.add_argument("--nosplit", dest='nosplit', action='store_true', help="use only train set without test")
 args = parser.parse_args()
 gpus = tf.config.list_physical_devices('GPU')
