@@ -51,8 +51,8 @@ def SLRol(n_bands, q):
 
 # Define the combined model
   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'CombinedModel{q}_layers{num_conv_layers}_Xavier'
-  
+  model_name=f'CombinedModel{q}_layers{num_conv_layers}_Xavier1.0'
+   
 
 # Compile the model
 
@@ -77,7 +77,7 @@ def SLRol(n_bands, q):
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   # model.compile(optimizer=optimizer,loss='mse')
-  combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 0.2])
+  combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
   
 
 # # Add early stopping
