@@ -42,8 +42,10 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 #     token="your-dagshub-access-token"
 # )
 
-mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
-mlflow.set_experiment("SRL_SOA_V.2")
+# mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow") ## Version 1 on git account 
+mlflow.set_tracking_uri("https://dagshub.com/gajravidhi.03/SRL-SOA.mlflow") ## version 2 on gajravidhi
+
+mlflow.set_experiment("SRL_SOA_V.1")
 # Capture System Metrics
 # cpu_info = platform.processor()
 cpu_count = psutil.cpu_count(logical=True)
