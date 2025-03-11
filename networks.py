@@ -18,7 +18,7 @@ def SLRol(n_bands, q):
 
 
 # Load the pretrained guiding classifier
-  guiding_classifier = tf.keras.models.load_model("guiding_classifier.h5")
+  guiding_classifier = tf.keras.models.load_model("guiding_classifier_salinas.h5")
 
 # Ensure the classifier is not trainable
   guiding_classifier.trainable = False  
@@ -27,7 +27,7 @@ def SLRol(n_bands, q):
   guiding_classifier.summary()
 
   x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  model_name=f'Oper1D_q{q}_supervised'
+  model_name=f'Oper1D_q{q}_supervised_Salinas'
   hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
@@ -47,17 +47,17 @@ def SLRol(n_bands, q):
   
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
-  class_preds = guiding_classifier(y)
+#   class_preds = guiding_classifier(y)
 
-# Define the combined model
-  combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'Oper1d_CombinedModel_Xavier'
+# # Define the combined model
+#   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
+#   model_name=f'Oper1d_CombinedModel_Xavier'
    
 
 # Compile the model
 
 # Print summary
-  combined_model.summary()
+  # combined_model.summary()
 
   # model = tf.keras.models.Model(input, y, name=model_name)
   
@@ -77,7 +77,7 @@ def SLRol(n_bands, q):
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   # model.compile(optimizer=optimizer,loss='mse')
-  combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
+  # combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
   
 
 # # Add early stopping
@@ -85,8 +85,9 @@ def SLRol(n_bands, q):
 
 
 
-  # model.compile(optimizer = optimizer, loss = 'mse')
+  model.compile(optimizer = optimizer, loss = 'mse')
+  
 
-  combined_model.summary()
+  # combined_model.summary()
     
   return model_name, hyperparams , combined_model
