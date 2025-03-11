@@ -59,17 +59,17 @@ def loadEvalData(dataset):
     Data = scipy.io.loadmat('data/' + dataset + '.mat')
     if 'Indian' in dataset:
         Gtd = scipy.io.loadmat('data/' + 'Indian_pines_gt.mat')
-    elif 'SalinasA' in dataset:
-        Gtd = scipy.io.loadmat('data/' + 'SalinasA_gt.mat')
+    elif 'Salinas' in dataset:
+        Gtd = scipy.io.loadmat('data/' + 'Salinas_gt.mat')
     else:
         Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
 
     if dataset == 'Indian_pines_corrected':
         image = Data['indian_pines_corrected']
         gtd = Gtd['indian_pines_gt']
-    elif dataset == 'SalinasA_corrected':
-        image = Data['salinasA_corrected']
-        gtd = Gtd['salinasA_gt']
+    elif dataset == 'Salinas_corrected':
+        image = Data['salinas_corrected']
+        gtd = Gtd['salinas_gt']
     else:
         raise ValueError('The selected dataset is not valid.')
 
