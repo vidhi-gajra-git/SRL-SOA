@@ -43,7 +43,7 @@ dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
 # )
 
 mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow")
-mlflow.set_experiment("SRL_SOA_V.1")
+mlflow.set_experiment("SRL_SOA_V.2")
 # Capture System Metrics
 # cpu_info = platform.processor()
 cpu_count = psutil.cpu_count(logical=True)
