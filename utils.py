@@ -36,7 +36,7 @@ matplotlib.use('Agg')
 np.random.seed(42)
 tf.random.set_seed(42)
 # Connect MLflow to DagsHub
-dagshub.init(repo_owner='vidhi-gajra-git', repo_name='SRL_SOA', mlflow=True)
+dagshub.init(repo_owner='gajravidhi.03', repo_name='SRL-SOA', mlflow=True)
 # dagshub.auth.add_credentials(
 #     username="your-dagshub-username",
 #     token="your-dagshub-access-token"
