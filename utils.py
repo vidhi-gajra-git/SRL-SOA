@@ -248,7 +248,7 @@ def reduce_bands(param, classData, Data, i):
 
     y_train = to_categorical(y_train, num_classes)
 
-    if dataset != 'SalinasA_corrected': xx = classData['x_train']
+    if dataset != 'Salinas_corrected': xx = classData['x_train']
     else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
 
     if modelType == 'SRL-SOA':
@@ -303,7 +303,7 @@ def reduce_bands(param, classData, Data, i):
                         callbacks=callbacks_osen, shuffle=True,
                         validation_data=(xx, xx), epochs = epochs)
                 execution_time = round(time.time() - start_time, 2)  # Seconds
-                model_size = round(os.path.getsize(f"weights/Indian_pines_corrected/{model_name}_run{i}.weights.h5") / (1024 ** 2), 2)
+                model_size = round(os.path.getsize(f"weights/{dataset}/{model_name}_run{i}.weights.h5") / (1024 ** 2), 2)
                 
                 
                 mlflow.tensorflow.log_model(model,model_name)
