@@ -90,4 +90,4 @@ def SLRol(n_bands, q):
 
   # combined_model.summary()
     
-  return model_name, hyperparams , combined_model
+  return model_name, hyperparams , model
