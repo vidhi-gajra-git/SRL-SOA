@@ -61,6 +61,7 @@ else:
 # #      nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata = load_train(train_filename, train_labels_filename, args.nosplit)
  # nbands,nrows,ncols,X_train,X_test,y_train,y_test,zerodata
 classData , data = loadEvalData(vars(args)['dataset'])
+
 X_train_np=classData[0]['x_train']
 X_test_np=classData[0]['x_test']
 y_train=classData[0]['y_train']
