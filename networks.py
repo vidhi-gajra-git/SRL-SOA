@@ -11,15 +11,6 @@ from self_onn import SparseAutoencoderNonLinear
 np.random.seed(42)
 tf.random.set_seed(42)
 
-# def sparse_loss(y_true, y_pred):
-#     mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
-#     hidden_layer_output = encoder(y_true)
-#     mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
-
-#     kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
-#                                   (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
-
-#     return mse_loss + lambda_sparse * kl_divergence
 
 ### SLR-OL
 def SLRol(n_bands, q):
@@ -48,7 +39,16 @@ def SLRol(n_bands, q):
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
-  
+  # def sparse_loss(y_true, y_pred):
+  #   mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
+  #   hidden_layer_output = SparseAutoencoderNonLinear(y_true)
+  #   mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
+
+  #   kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
+  #                                 (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
+
+  #   return mse_loss + lambda_sparse * kl_divergence
+
   # # print("!!!!!!!!!!",x_0.shape, "!!!!!!!!!!!!!!!!!!!")
   # x_0=SelfONN1D(filters=n_bands, kernel_size=5,q=q)
   # x_0 =Oper1DDilated(n_bands, dilation_rates=[1, 2, 4], activation = 'tanh', q = q)(input)
