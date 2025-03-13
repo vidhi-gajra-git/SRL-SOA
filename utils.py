@@ -82,6 +82,8 @@ def loadEvalData(dataset):
         gtd = Gtd['salinas_gt']
         image = np.array(image, dtype='float32')
         gtd = np.array(gtd, dtype='float32')
+        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
         x_class = xx
         y_class = label
     else:
@@ -159,6 +161,8 @@ def loadData(dataset):
         gtd = Gtd['salinas_gt']
         image = np.array(image, dtype='float32')
         gtd = np.array(gtd, dtype='float32')
+        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
         x_class = xx
         y_class = label
     else:
