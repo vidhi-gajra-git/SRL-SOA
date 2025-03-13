@@ -248,7 +248,7 @@ def reduce_bands(param, classData, Data, i):
 
     # y_train = to_categorical(y_train, num_classes)
 
-    if dataset != 'Salinas_corrected': xx = classData['x_train']
+    if dataset != 'SalinasA_corrected': xx = classData['x_train']
     else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
 
     if modelType == 'SRL-SOA':
