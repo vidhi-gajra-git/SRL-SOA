@@ -69,21 +69,27 @@ def loadEvalData(dataset):
     if dataset == 'Indian_pines_corrected':
         image = Data['indian_pines_corrected']
         gtd = Gtd['indian_pines_gt']
+        image = np.array(image, dtype='float32')
+        gtd = np.array(gtd, dtype='float32')
+        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
+    
+        x_class = xx[label != 0]
+        y_class = label[label != 0]
+
     elif dataset == 'Salinas_corrected':
         image = Data['salinas_corrected']
         gtd = Gtd['salinas_gt']
+        image = np.array(image, dtype='float32')
+        gtd = np.array(gtd, dtype='float32')
+        x_class = xx
+        y_class = label
     else:
         raise ValueError('The selected dataset is not valid.')
 
-    image = np.array(image, dtype='float32')
-    gtd = np.array(gtd, dtype='float32')
+    
 
-    xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-    label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
-
-    x_class = xx[label != 0]
-    y_class = label[label != 0]
-
+    
     # Fit a single scaler for consistency
     global_scaler = StandardScaler()
     global_scaler.fit(x_class)
@@ -136,23 +142,27 @@ def loadData(dataset):
     else:
         Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
 
+   
     if dataset == 'Indian_pines_corrected':
         image = Data['indian_pines_corrected']
         gtd = Gtd['indian_pines_gt']
+        image = np.array(image, dtype='float32')
+        gtd = np.array(gtd, dtype='float32')
+        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
+    
+        x_class = xx[label != 0]
+        y_class = label[label != 0]
+
     elif dataset == 'Salinas_corrected':
         image = Data['salinas_corrected']
         gtd = Gtd['salinas_gt']
+        image = np.array(image, dtype='float32')
+        gtd = np.array(gtd, dtype='float32')
+        x_class = xx
+        y_class = label
     else:
         raise ValueError('The selected dataset is not valid.')
-
-    image = np.array(image, dtype='float32')
-    gtd = np.array(gtd, dtype='float32')
-
-    xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-    label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]])
-
-    x_class = xx[label != 0]
-    y_class = label[label != 0]
 
     # Fit a single scaler for consistency
     global_scaler = StandardScaler()
@@ -248,7 +258,7 @@ def reduce_bands(param, classData, Data, i):
 
     y_train = to_categorical(y_train, num_classes)
 
-    if dataset != 'Salinas_corrected': xx = classData['x_train']
+    if dataset != 'SalinasA_corrected': xx = classData['x_train']
     else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
 
     if modelType == 'SRL-SOA':
