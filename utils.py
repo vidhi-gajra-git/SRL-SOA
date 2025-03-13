@@ -246,7 +246,7 @@ def reduce_bands(param, classData, Data, i):
     # number of outputs (classes) with additional zero class (not used for train)
     num_classes = int (np.max(y_train) + 1)
 
-    y_train = to_categorical(y_train, num_classes)
+    # y_train = to_categorical(y_train, num_classes)
 
     if dataset != 'Salinas_corrected': xx = classData['x_train']
     else: xx = np.concatenate([classData['x_train'], Data['scd']], axis = 0)
