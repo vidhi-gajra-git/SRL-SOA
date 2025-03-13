@@ -11,6 +11,15 @@ from multi_layer_multi_kernel import SparseAutoencoderNonLinear2 ,MultiKernelEnc
 np.random.seed(42)
 tf.random.set_seed(42)
 
+def sparse_loss(y_true, y_pred):
+    mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
+    hidden_layer_output = encoder(y_true)
+    mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
+
+    kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
+                                  (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
+
+    return mse_loss + lambda_sparse * kl_divergence
 
 ### SLR-OL
 def SLRol(n_bands, q):
