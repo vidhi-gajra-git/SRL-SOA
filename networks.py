@@ -24,7 +24,7 @@ def SLRol(n_bands, q):
   guiding_classifier.trainable = False  
 
 # Print model summary to verify
-  guiding_classifier.summary()
+  # guiding_classifier.summary()
 
   # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
   # model_name=f'Oper1D_q{q}_supervised_Salinas'
