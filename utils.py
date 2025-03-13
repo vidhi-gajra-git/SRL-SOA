@@ -1,4 +1,4 @@
-
+import gc 
 
 import os
 import scipy.io
@@ -130,6 +130,8 @@ def loadEvalData(dataset):
     print('Training samples: ', len(classData['x_train']))
     print('Test samples: ', len(classData['x_test']))
     print('\nNumber of bands: ', str(classData['x_train'].shape[-1]))
+    del scd, gtd, image  # Free memory
+    gc.collect()
 
     return classDataa, Dataa
 
@@ -206,6 +208,8 @@ def loadData(dataset):
     print('Training samples: ', len(classData['x_train']))
     print('Test samples: ', len(classData['x_test']))
     print('\nNumber of bands: ', str(classData['x_train'].shape[-1]))
+    del scd, gtd, image  # Free memory
+    gc.collect()
 
     return classDataa, Dataa
 def plotBands(selected_bands , data ,i, all_bands ):
