@@ -178,7 +178,7 @@ def loadData(dataset):
     Dataa = []
     for _ in range(10):  # No need to vary seed in loop
         x_train, x_test, y_train, y_test = train_test_split(
-            x_class, y_class, test_size=0.95, random_state=42
+            x_class, y_class, test_size=0.85, random_state=42
         )
 
         # Use the global scaler
