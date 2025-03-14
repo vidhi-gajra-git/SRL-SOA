@@ -110,8 +110,8 @@ def loadEvalData(dataset):
         classData = {
             'x_train': x_train,
             'x_test': x_test,
-            'y_train': y_train - 1,
-            'y_test': y_test - 1
+            'y_train': y_train ,
+            'y_test': y_test 
         }
 
         # Process image data with the same scaler
@@ -188,8 +188,8 @@ def loadData(dataset):
         classData = {
             'x_train': x_train,
             'x_test': x_test,
-            'y_train': y_train - 1 ,
-            'y_test': y_test - 1
+            'y_train': y_train  ,
+            'y_test': y_test 
         }
 
         # Process image data with the same scaler
