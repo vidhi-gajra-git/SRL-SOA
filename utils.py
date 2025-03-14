@@ -332,12 +332,18 @@ def reduce_bands(param, classData, Data, i):
 
                 intermediate_layer_model = tf.keras.Model(inputs = model.input,
                                                 outputs = model.layers[1].output)
-                A = intermediate_layer_model(classData['x_train'])
-        
+                batch_size = 1024  # Adjust based on available memory
+                A_list = []
+
+                for i in range(0, classData['x_train'].shape[0], batch_size):
+                    batch = classData['x_train'][i : i + batch_size]
+                    A_batch = intermediate_layer_model(batch)
+                    A_list.append(A_batch)
+                
+                A = np.vstack(A_list)  
                 A = np.abs(A)
-                A = np.mean(A, axis = 0)
-                A = np.sum(A, axis = 0)
-                indices = np.argsort(A)
+                A = np.mean(A, axis=0)
+                A = np.sum(A, axis=0)
                 ind_a=indices[-s_bands::]
                 df_bands = pd.DataFrame(ind_a, columns=["Selected_Bands"])
                 csv_file_path = "results/selected_bands.csv"
