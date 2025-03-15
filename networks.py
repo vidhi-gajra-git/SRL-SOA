@@ -60,7 +60,7 @@ def SLRol(n_bands, q):
 
 # # Define the combined model
   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'SparseAutoencoderNonLinear_CombinedModel_Xavier_salinas'
+  model_name=f'SparseAutoencoderNonLinear_CombinedModel{q}_Xavier_salinas'
    
 
 # Compile the model
