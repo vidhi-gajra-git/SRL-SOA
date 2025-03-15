@@ -344,6 +344,7 @@ def reduce_bands(param, classData, Data, i):
                 A = np.abs(A)
                 A = np.mean(A, axis=0)
                 A = np.sum(A, axis=0)
+                indices = np.argsort(A)
                 ind_a=indices[-s_bands::]
                 df_bands = pd.DataFrame(ind_a, columns=["Selected_Bands"])
                 csv_file_path = "results/selected_bands.csv"
