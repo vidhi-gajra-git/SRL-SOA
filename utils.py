@@ -66,7 +66,7 @@ def loadEvalData(dataset):
     else:
         Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
 
-    if dataset == 'Indian_pines_corrected':
+    if dataset == 'Indian_pines_corrected' or dataset == 'Salinas_corrected':
         image = Data['indian_pines_corrected']
         gtd = Gtd['indian_pines_gt']
         image = np.array(image, dtype='float32')
@@ -77,15 +77,15 @@ def loadEvalData(dataset):
         x_class = xx[label != 0]
         y_class = label[label != 0]
 
-    elif dataset == 'Salinas_corrected':
-        image = Data['salinas_corrected']
-        gtd = Gtd['salinas_gt']
-        image = np.array(image, dtype='float32')
-        gtd = np.array(gtd, dtype='float32')
-        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
-        x_class = xx
-        y_class = label
+    # elif dataset == 'Salinas_corrected':
+    #     image = Data['salinas_corrected']
+    #     gtd = Gtd['salinas_gt']
+    #     image = np.array(image, dtype='float32')
+    #     gtd = np.array(gtd, dtype='float32')
+    #     xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+    #     label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
+    #     x_class = xx
+    #     y_class = label
     else:
         raise ValueError('The selected dataset is not valid.')
 
@@ -110,8 +110,8 @@ def loadEvalData(dataset):
         classData = {
             'x_train': x_train,
             'x_test': x_test,
-            'y_train': y_train ,
-            'y_test': y_test 
+            'y_train': y_train-1 ,
+            'y_test': y_test-1 
         }
 
         # Process image data with the same scaler
@@ -147,7 +147,7 @@ def loadData(dataset):
         Gtd = scipy.io.loadmat('data/' + dataset + '_gt.mat')
 
    
-    if dataset == 'Indian_pines_corrected':
+    if dataset == 'Indian_pines_corrected' or dataset == 'Salinas_corrected':
         image = Data['indian_pines_corrected']
         gtd = Gtd['indian_pines_gt']
         image = np.array(image, dtype='float32')
@@ -158,15 +158,15 @@ def loadData(dataset):
         x_class = xx[label != 0]
         y_class = label[label != 0]
 
-    elif dataset == 'Salinas_corrected':
-        image = Data['salinas_corrected']
-        gtd = Gtd['salinas_gt']
-        image = np.array(image, dtype='float32')
-        gtd = np.array(gtd, dtype='float32')
-        xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
-        label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
-        x_class = xx
-        y_class = label
+    # elif dataset == 'Salinas_corrected':
+    #     image = Data['salinas_corrected']
+    #     gtd = Gtd['salinas_gt']
+    #     image = np.array(image, dtype='float32')
+    #     gtd = np.array(gtd, dtype='float32')
+    #     xx = np.reshape(image, [image.shape[0] * image.shape[1], image.shape[2]])
+    #     label = np.reshape(gtd, [gtd.shape[0] * gtd.shape[1]]) 
+    #     x_class = xx
+    #     y_class = label
     else:
         raise ValueError('The selected dataset is not valid.')
 
@@ -188,8 +188,8 @@ def loadData(dataset):
         classData = {
             'x_train': x_train,
             'x_test': x_test,
-            'y_train': y_train  ,
-            'y_test': y_test 
+            'y_train': y_train -1 ,
+            'y_test': y_test -1
         }
 
         # Process image data with the same scaler
