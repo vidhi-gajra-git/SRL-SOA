@@ -56,7 +56,7 @@ def SLRol(n_bands, q):
   
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
-  class_preds = guiding_classifier(y)
+  # class_preds = guiding_classifier(y)
 
 # # Define the combined model
   # combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
