@@ -18,23 +18,23 @@ def SLRol(n_bands, q):
 
 
 # Load the pretrained guiding classifier
-  guiding_classifier = tf.keras.models.load_model("guiding_classifier_salinas.h5")
+#   guiding_classifier = tf.keras.models.load_model("guiding_classifier_salinas.h5")
 
-# Ensure the classifier is not trainable
-  guiding_classifier.trainable = False  
+# # Ensure the classifier is not trainable
+#   guiding_classifier.trainable = False  
 
 # Print model summary to verify
   # guiding_classifier.summary()
 
-  # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  # model_name=f'Oper1D_q{q}_supervised_Salinas'
-  # hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
+  x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+  model_name=f'Oper1D_q{q}_supervised_Salinas'
+  hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
-  num_conv_layers = 2 # Number of Conv1D layers per degree
-  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
-  # model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_'
-  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
+  # num_conv_layers = 2 # Number of Conv1D layers per degree
+  # x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
+  # # model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_'
+  # hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
   # x_0=MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
@@ -59,8 +59,8 @@ def SLRol(n_bands, q):
   class_preds = guiding_classifier(y)
 
 # # Define the combined model
-  combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'SparseAutoencoderNonLinear_CombinedModel{q}_Xavier_salinas'
+  # combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
+  # model_name=f'SparseAutoencoderNonLinear_CombinedModel{q}_Xavier_salinas'
    
 
 # Compile the model
@@ -85,8 +85,8 @@ def SLRol(n_bands, q):
   optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-  # model.compile(optimizer=optimizer,loss='mse')
-  combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
+  model.compile(optimizer=optimizer,loss='mse')
+  # combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
   
 
 # # Add early stopping
@@ -99,4 +99,4 @@ def SLRol(n_bands, q):
 
   # combined_model.summary()
     
-  return model_name, hyperparams , combined_model
+  return model_name, hyperparams , model
