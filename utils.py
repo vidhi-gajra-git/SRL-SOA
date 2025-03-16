@@ -156,6 +156,10 @@ def loadData(dataset):
     elif dataset == 'Salinas_corrected':
         image = Data['salinas_corrected']
         gtd = Gtd['salinas_gt']
+    elif dataset==['PaviaU']:
+        image = Data['paviaU']
+        gtd = Gtd['paviaU_gt']
+        
         
     else:
         raise ValueError('The selected dataset is not valid.')
