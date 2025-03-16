@@ -27,7 +27,7 @@ def SLRol(n_bands, q):
   # guiding_classifier.summary()
 
   x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  model_name=f'Oper1D_q{q}_supervised_Salinas'
+  model_name=f'Oper1D_q{q}_supervised_PaviaU'
   hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
