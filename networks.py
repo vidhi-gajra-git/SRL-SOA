@@ -7,6 +7,7 @@ from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
 from self_onn import SparseAutoencoderNonLinear
+from tensorflow.keras import backend as K
 
 # from multi_layer_multi_kernel import SparseAutoencoderNonLinear2 ,MultiKernelEncoder 
 np.random.seed(42)
@@ -44,11 +45,14 @@ def SLRol(n_bands, q):
     sparsity_level=0.01
     mse_loss = tf.reduce_mean(tf.keras.losses.MSE(y_true, y_pred))
     # hidden_layer_output = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(y_true)
-    mean_activation = tf.reduce_mean(x_0, axis=0)
-    # mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
+    mean_activation = K.mean(x_0, axis=1, keepdims=True)  # Compute mean activation
 
-    kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
-                                  (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
+        # Kullback-Leibler (KL) Divergence loss
+    kl_divergence = K.sum(
+            sparsity_level * K.log(sparsity_level / (mean_activation + 1e-10)) +
+            (1 - sparsity_level) * K.log((1 - sparsity_level) / (1 - mean_activation + 1e-10))
+        )
+
 
     return mse_loss + lambda_sparse * kl_divergence
 
