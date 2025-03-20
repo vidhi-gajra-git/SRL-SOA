@@ -19,13 +19,13 @@ def SLRol(n_bands, q):
   input = tf.keras.Input((n_bands, 1), name='input')
 
 
-# Load the pretrained guiding classifier
-  guiding_classifier = tf.keras.models.load_model("guiding_classifier_KSC.h5")
+# # Load the pretrained guiding classifier
+#   guiding_classifier = tf.keras.models.load_model("guiding_classifier_KSC.h5")
 
-# Ensure the classifier is not trainable
-  guiding_classifier.trainable = False  
+# # Ensure the classifier is not trainable
+#   guiding_classifier.trainable = False  
 
-# Print model summary to verify
+# # Print model summary to verify
   guiding_classifier.summary()
 
   # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
@@ -41,13 +41,13 @@ def SLRol(n_bands, q):
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
-  def sparse_loss(y_true, y_pred):
-    mse_loss = K.mean(tf.keras.losses.MSE(y_true, y_pred))
+  # def sparse_loss(y_true, y_pred):
+  #   mse_loss = K.mean(tf.keras.losses.MSE(y_true, y_pred))
     
-    # L1 Regularization on activations
-    sparsity_penalty = lambda_sparse * K.mean(tf.abs(x_0))  
+  #   # L1 Regularization on activations
+  #   sparsity_penalty = lambda_sparse * K.mean(tf.abs(x_0))  
 
-    return mse_loss + sparsity_penalty
+  #   return mse_loss + sparsity_penalty
 
   # # print("!!!!!!!!!!",x_0.shape, "!!!!!!!!!!!!!!!!!!!")
   # x_0=SelfONN1D(filters=n_bands, kernel_size=5,q=q)
@@ -56,11 +56,11 @@ def SLRol(n_bands, q):
   
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
-  class_preds = guiding_classifier(y)
+  # class_preds = guiding_classifier(y)
 
-# # # Define the combined model
-  combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'CombinedModel{q}_Xavier_Classifier_KSC_run2'
+# # # # Define the combined model
+#   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
+#   model_name=f'CombinedModel{q}_Xavier_Classifier_KSC_run2'
    
 
 # Compile the model
@@ -88,8 +88,8 @@ def SLRol(n_bands, q):
 
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
-  # model.compile(optimizer=optimizer,loss='mse')
-  combined_model.compile(optimizer=optimizer, loss=[sparse_loss, 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
+  model.compile(optimizer=optimizer,loss='mse')
+  # combined_model.compile(optimizer=optimizer, loss=[sparse_loss, 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
   
 
 # # Add early stopping
@@ -102,4 +102,4 @@ def SLRol(n_bands, q):
 
   # combined_model.summary()
     
-  return model_name, hyperparams , combined_model
+  return model_name, hyperparams, model
