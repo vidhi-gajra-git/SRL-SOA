@@ -18,7 +18,7 @@ def SLRol(n_bands, q):
 
 
 # Load the pretrained guiding classifier
-  guiding_classifier = tf.keras.models.load_model("guiding_classifier_paviaU.h5")
+  guiding_classifier = tf.keras.models.load_model("guiding_classifier_KSC.h5")
 
 # Ensure the classifier is not trainable
   guiding_classifier.trainable = False  
