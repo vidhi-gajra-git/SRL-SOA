@@ -15,7 +15,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         for degree in range(1, q + 1):  # Powers from x^1 to x^q
             self.conv_layers[degree] = []
             for _ in range(num_conv_layers):  # Multiple Conv1D layers per degree
-                self.conv_layers[degree].append(layers.Conv1D(filters=n, kernel_size=3, padding='same', activation=None , kernel_initializer=tf.keras.initializers.GlorotNormal()
+                self.conv_layers[degree].append(layers.Conv1D(filters=n, kernel_size=3, padding='same', activation='relu , kernel_initializer=tf.keras.initializers.GlorotNormal()
  ))
         
         # Final Conv1D layer with L1 regularization
@@ -35,7 +35,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
             x_transformed = tf.math.pow(inputs, degree)  # Apply non-linearity (x^degree)
             for conv in conv_list:
                 x_transformed = conv(x_transformed)
-                x_transformed = layers.Activation('swish')(x_transformed) # Apply multiple Conv1D layers
+                # x_transformed = layers.Activation('swish')(x_transformed) # Apply multiple Conv1D layers
             multi_scale_outputs.append(x_transformed)
         
         # Sum all transformed outputs
