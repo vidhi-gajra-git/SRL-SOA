@@ -68,7 +68,7 @@ def SLRol(n_bands, q):
 # Print summary
   # combined_model.summary()
 
-  model = tf.keras.models.Model(input, y, name=model_name)
+  # model = tf.keras.models.Model(input, y, name=model_name)
   
 #   lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
 #     initial_learning_rate=0.001,
