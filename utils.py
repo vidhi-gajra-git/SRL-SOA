@@ -285,7 +285,7 @@ def reduce_bands(param, classData, Data, i):
     if modelType == 'SRL-SOA':
         weightsDir = 'weights/' + dataset + '/'
         if not os.path.exists(weightsDir): os.makedirs(weightsDir)
-        model_name , hyperparams ,  model = networks.SLRol(n_bands = n_bands, q = q)
+        model_name , hyperparams ,  model = networks.SLRol(n_bands = n_bands, q = q,dataset)
         
         weightName = weightsDir + model_name + '_run' + str(i) + '.weights.h5'
         
