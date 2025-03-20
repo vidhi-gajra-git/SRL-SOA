@@ -41,7 +41,7 @@ def SLRol(n_bands, q):
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
-  def sparse_loss(x_0, y_true, y_pred):
+  def sparse_loss( y_true, y_pred,x_0):
         sparsity_level = 0.01
         print("$"*15, input_tensor.shape, y_pred.shape)
         # hidden_layer_output=SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(input_tensor)
