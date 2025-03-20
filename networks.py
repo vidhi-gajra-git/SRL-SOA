@@ -32,9 +32,9 @@ def SLRol(n_bands, q):
  
   # q = 3    # Degree of non-linearity
   num_conv_layers = 2 # Number of Conv1D layers per degree
-  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
+  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='leakyRelu')(input)
   # model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_'
-  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
+  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers,activation='leakyRelu').get_hyperparameters()
   # x_0=MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
@@ -82,7 +82,7 @@ def SLRol(n_bands, q):
   #                                        decay_rate=hyperparams2["decay_rate"])
 
   # optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule )
-  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+  optimizer = tf.keras.optimizers.AdamW(learning_rate=0.001,weight_decay=1e-5)
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   # model.compile(optimizer=optimizer,loss='mse')
