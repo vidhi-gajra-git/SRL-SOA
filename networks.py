@@ -41,11 +41,14 @@ def SLRol(n_bands, q):
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
-  def sparse_loss(input_tensor, y_pred):
+  def sparse_loss(input_tensor, y_):
         sparsity_level = 0.01
-        mse_loss = tf.math.reduce_mean(tf.keras.losses.MSE(y_true, y_pred))
-        print("$"*15, input_tensor.shape)
+        print("$"*15, input_tensor.shape, y_pre.shape)
         hidden_layer_output=SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(input_tensor)
+        # y_pred = tf.keras.layers.Dot(axes=(2,1))([hidden_layer_output, input])
+        
+        mse_loss = tf.math.reduce_mean(tf.keras.losses.MSE(input_tensor, y_pred))
+        
         # x_0 = tf.convert_to_tensor(x_0, dtype=tf.float32)
         mean_activation = K.mean(hidden_layer_output, axis=1, keepdims=True)
         # mean_activation = tf.math.reduce_mean(x_0, axis=0)  # Use the existing output
