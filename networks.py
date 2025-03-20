@@ -32,9 +32,9 @@ def SLRol(n_bands, q):
  
   # q = 3    # Degree of non-linearity
   num_conv_layers = 2 # Number of Conv1D layers per degree
-  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='relu')(input)
+  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(input)
   # model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_'
-  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers,activation='relu').get_hyperparameters()
+  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers,activation='tanh').get_hyperparameters()
   # x_0=MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
@@ -60,7 +60,7 @@ def SLRol(n_bands, q):
 
 # # Define the combined model
   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'CombinedModel{q}_He_classifier_RmsProp_PaviaU'
+  model_name=f'CombinedModel{q}_Xavier_Classifier_PaviaU'
    
 
 # Compile the model
