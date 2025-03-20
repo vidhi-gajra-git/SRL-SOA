@@ -53,7 +53,7 @@ def SLRol(n_bands, q,dataset):
   if dataset=='PaviaU':
       guiding_classifier = tf.keras.models.load_model("guiding_classifier_paviaU.h5")
     
-  elif dataset='Indian_pines_corrected':
+  elif dataset=='Indian_pines_corrected':
       guiding_classifier = tf.keras.models.load_model("guiding_classifier.h5")
   elif dataset=='Salinas':
     guiding_classifier = tf.keras.models.load_model("guiding_classifier_salinas.h5")
