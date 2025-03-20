@@ -36,14 +36,14 @@ matplotlib.use('Agg')
 np.random.seed(42)
 tf.random.set_seed(42)
 # Connect MLflow to DagsHub
-dagshub.init(repo_owner='gajravidhi.03', repo_name='SRL-SOA', mlflow=True)
+dagshub.init(repo_owner='gajravidhi.11', repo_name='SRL-SOA', mlflow=True)
 # dagshub.auth.add_credentials(
 #     username="your-dagshub-username",
 #     token="your-dagshub-access-token"
 # )
 
 # mlflow.set_tracking_uri("https://dagshub.com/vidhi-gajra-git/SRL_SOA.mlflow") ## Version 1 on git account 
-mlflow.set_tracking_uri("https://dagshub.com/gajravidhi.03/SRL-SOA.mlflow") ## version 2 on gajravidhi
+mlflow.set_tracking_uri("https://dagshub.com/gajravidhi.11/SRL-SOA.mlflow") ## version 2 on gajravidhi
 
 mlflow.set_experiment("SRL_SOA_V.1")
 # Capture System Metrics
