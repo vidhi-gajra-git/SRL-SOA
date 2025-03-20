@@ -7,6 +7,7 @@ from layers import Oper1D
 from multi_kernel import Oper1DDilated
 from multi_layer import SparseAutoencoderWithAttention
 from self_onn import SparseAutoencoderNonLinear
+
 # from multi_layer_multi_kernel import SparseAutoencoderNonLinear2 ,MultiKernelEncoder 
 np.random.seed(42)
 tf.random.set_seed(42)
@@ -41,7 +42,7 @@ def SLRol(n_bands, q):
 
   def sparse_loss(y_true, y_pred):
     sparsity_level=0.01
-    mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
+    mse_loss = tf.reduce_mean(tf.keras.losses.MSE(y_true, y_pred))
     hidden_layer_output = SparseAutoencoderNonLinear(y_true)
     mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
 
