@@ -44,15 +44,17 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
 
         
         # Apply L1 regularization in the final layer
-        x = self.final_layer(x)
-        if self.activation == 'tanh':
-            x = tf.nn.tanh(x)
-        elif self.activation == 'swish':
-            x = tf.nn.swish(x)
-        elif self.activation == 'relu':
-            x = tf.nn.relu(x)
-        elif self.activation=='leakyRelu':
-            x = layers.LeakyReLU(alpha=0.01)(x)
+        # x = self.final_layer(x)
+        # if self.activation == 'tanh':
+        #     x = tf.nn.tanh(x)
+        # elif self.activation == 'swish':
+        #     x = tf.nn.swish(x)
+        # elif self.activation == 'relu':
+        #     x = tf.nn.relu(x)
+        # elif self.activation=='leakyRelu':
+        #     x = layers.LeakyReLU(alpha=0.01)(x)
+        if self.activation is not None:
+              x = eval('tf.nn.' + self.activation + '(x)')
 
 
         x = tf.vectorized_map(fn=diag_zero, elems = x) # Diagonal constraint.
