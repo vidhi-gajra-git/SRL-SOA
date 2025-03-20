@@ -32,9 +32,9 @@ def SLRol(n_bands, q):
  
   # q = 3    # Degree of non-linearity
   num_conv_layers = 2 # Number of Conv1D layers per degree
-  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='swish')(input)
+  x_0= SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='relu')(input)
   # model_name=f'SparseAutoencoderNonLinear{q}_layers{num_conv_layers}_Xavier_'
-  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers,activation='swish').get_hyperparameters()
+  hyperparams = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers,activation='relu').get_hyperparameters()
   # x_0=MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers)(input)
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
