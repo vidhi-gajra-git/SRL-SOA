@@ -42,10 +42,10 @@ def SLRol(n_bands, q):
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
   def sparse_loss(y_true, y_pred):
-    mse_loss = tf.reduce_mean(tf.keras.losses.MSE(y_true, y_pred))
+    mse_loss = K.mean(tf.keras.losses.MSE(y_true, y_pred))
     
     # L1 Regularization on activations
-    sparsity_penalty = lambda_sparse * tf.reduce_mean(tf.abs(x_0))  
+    sparsity_penalty = lambda_sparse * K.mean(tf.abs(x_0))  
 
     return mse_loss + sparsity_penalty
 
