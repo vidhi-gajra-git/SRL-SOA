@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers, regularizers
 
 class SparseAutoencoderNonLinear(tf.keras.Model):
-    def __init__(self, n, q, num_conv_layers=2, activation='tanh', lambda_l1=0.01):
+    def __init__(self, n, q, num_conv_layers=2, activation='tanh', lambda_l1=0.001):
         super(SparseAutoencoderNonLinear, self).__init__(name='SparseAutoencoderNonLinear')
         self.n = n
         self.q = q
@@ -15,7 +15,8 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         for degree in range(1, q + 1):  # Powers from x^1 to x^q
             self.conv_layers[degree] = []
             for _ in range(num_conv_layers):  # Multiple Conv1D layers per degree
-                self.conv_layers[degree].append(layers.Conv1D(filters=n, kernel_size=3, padding='same', activation=activation , kernel_initializer=tf.keras.initializers.GlorotNormal() ))
+                self.conv_layers[degree].append(layers.Conv1D(filters=n, kernel_size=3, padding='same', activation=None , kernel_initializer=tf.keras.initializers.HeNormal()
+ ))
         
         # Final Conv1D layer with L1 regularization
         self.final_layer = layers.Conv1D(
@@ -33,7 +34,8 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
         for degree, conv_list in self.conv_layers.items():
             x_transformed = tf.math.pow(inputs, degree)  # Apply non-linearity (x^degree)
             for conv in conv_list:
-                x_transformed = conv(x_transformed)  # Apply multiple Conv1D layers
+                x_transformed = conv(x_transformed)
+                x_transformed = layers.LeakyReLU(alpha=0.01)(x_transformed) # Apply multiple Conv1D layers
             multi_scale_outputs.append(x_transformed)
         
         # Sum all transformed outputs
@@ -49,6 +51,8 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
             x = tf.nn.swish(x)
         elif self.activation == 'relu':
             x = tf.nn.relu(x)
+        elif self.activation=='leakyRelu':
+            x = layers.LeakyReLU(alpha=0.01)(x)
 
 
         x = tf.vectorized_map(fn=diag_zero, elems = x) # Diagonal constraint.
