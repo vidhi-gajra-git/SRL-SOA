@@ -44,8 +44,8 @@ def SLRol(n_bands, q):
   def sparse_loss(y_true, y_pred):
     sparsity_level=0.01
     mse_loss = tf.reduce_mean(tf.keras.losses.MSE(y_true, y_pred))
-    # hidden_layer_output = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(y_true)
-    mean_activation = tf.keras.backend.mean(x_0, axis=1, keepdims=True)  # Compute mean activation
+    hidden_layer_output = SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(input)
+    mean_activation = tf.keras.backend.mean(hidden_layer_output, axis=1, keepdims=True)  # Compute mean activation
 
         # Kullback-Leibler (KL) Divergence loss
     kl_divergence = tf.keras.backend.sum(
