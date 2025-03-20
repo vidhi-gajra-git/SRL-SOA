@@ -15,7 +15,7 @@ tf.random.set_seed(42)
 
 
 ### SLR-OL
-def SLRol(n_bands, q):
+def SLRol(n_bands, q,dataset):
   input = tf.keras.Input((n_bands, 1), name='input')
 
 
@@ -50,7 +50,16 @@ def SLRol(n_bands, q):
   # testing the model on multi-scale conv .... and comparing the o/p 
   y = tf.keras.layers.Dot(axes=(2,1))([x_0, input])
   # Load the pretrained guiding classifier
-  guiding_classifier = tf.keras.models.load_model("guiding_classifier_KSC.h5")
+  if dataset=='PaviaU':
+      guiding_classifier = tf.keras.models.load_model("guiding_classifier_paviaU.h5")
+    
+  elif dataset='Indian_pines_corrected':
+      guiding_classifier = tf.keras.models.load_model("guiding_classifier.h5")
+  elif dataset=='Salinas':
+    guiding_classifier = tf.keras.models.load_model("guiding_classifier_salinas.h5")
+  elif dataset=='KSC' :
+  
+    guiding_classifier = tf.keras.models.load_model("guiding_classifier_KSC.h5")
 
 # Ensure the classifier is not trainable
   guiding_classifier.trainable = False  
@@ -61,7 +70,7 @@ def SLRol(n_bands, q):
 
 # # # # Define the combined model
   combined_model = tf.keras.Model(inputs=input, outputs=[y, class_preds], name='GuidedSparseAutoencoder')
-  model_name=f'CombinedModel_{q}_Xavier_Classifier_PaviaU_run'
+  model_name=f'CombinedModel_{q}_Xavier_Classifier_{dataset}_run'
    
 
 # Compile the model
