@@ -39,15 +39,16 @@ def SLRol(n_bands, q):
   # model_name=f'MultiKernelEncoder{q}_layers{num_conv_layers}_Xavier_init_3_5_7'
   # hyperparams = MultiKernelEncoder(n=n_bands, q=q, num_conv_layers=num_conv_layers).get_hyperparameters()
 
-  # def sparse_loss(y_true, y_pred):
-  #   mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
-  #   hidden_layer_output = SparseAutoencoderNonLinear(y_true)
-  #   mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
+  def sparse_loss(y_true, y_pred):
+    sparsity_level=0.01
+    mse_loss = tf.reduce_mean(keras.losses.MeanSquaredError()(y_true, y_pred))
+    hidden_layer_output = SparseAutoencoderNonLinear(y_true)
+    mean_activation = tf.reduce_mean(hidden_layer_output, axis=0)
 
-  #   kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
-  #                                 (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
+    kl_divergence = tf.reduce_sum(sparsity_level * tf.math.log(sparsity_level / (mean_activation + 1e-10)) +
+                                  (1 - sparsity_level) * tf.math.log((1 - sparsity_level) / (1 - mean_activation + 1e-10)))
 
-  #   return mse_loss + lambda_sparse * kl_divergence
+    return mse_loss + lambda_sparse * kl_divergence
 
   # # print("!!!!!!!!!!",x_0.shape, "!!!!!!!!!!!!!!!!!!!")
   # x_0=SelfONN1D(filters=n_bands, kernel_size=5,q=q)
@@ -83,13 +84,13 @@ def SLRol(n_bands, q):
 
   # optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule )
   # optimizer = tf.keras.optimizers.RMSProp(learning_rate=0.001)
-  optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.001)
-  # optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+  # optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.001)
+  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
   # model.compile(optimizer=optimizer,loss='mse')
-  combined_model.compile(optimizer=optimizer, loss=['mse', 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
+  combined_model.compile(optimizer=optimizer, loss=[sparse_loss, 'categorical_crossentropy'], loss_weights=[1.0, 1.0])
   
 
 # # Add early stopping
