@@ -44,7 +44,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
 
         
         # Apply L1 regularization in the final layer
-        # x = self.final_layer(x)
+        x = self.final_layer(x)
         # if self.activation == 'tanh':
         #     x = tf.nn.tanh(x)
         # elif self.activation == 'swish':
