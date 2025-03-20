@@ -35,7 +35,7 @@ class SparseAutoencoderNonLinear(tf.keras.Model):
             x_transformed = tf.math.pow(inputs, degree)  # Apply non-linearity (x^degree)
             for conv in conv_list:
                 x_transformed = conv(x_transformed)
-                x_transformed = layers.LeakyReLU(alpha=0.01)(x_transformed) # Apply multiple Conv1D layers
+                x_transformed = layers.Activation('swish')(x_transformed) # Apply multiple Conv1D layers
             multi_scale_outputs.append(x_transformed)
         
         # Sum all transformed outputs
