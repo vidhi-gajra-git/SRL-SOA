@@ -84,7 +84,7 @@ def SLRol(n_bands, q):
   # optimizer = tf.keras.optimizers.Adam(learning_rate=lr_schedule )
   # optimizer = tf.keras.optimizers.AdamW(learning_rate=0.001,weight_decay=1e-5)
   # optimizer=tf.keras.optimizers.RMSprop(learning_rate=0.001)
-  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, clipnorm=1.0)
+  optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 #   # Adjust the learning rate
 #   optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
