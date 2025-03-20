@@ -43,7 +43,7 @@ def SLRol(n_bands, q):
 
   def sparse_loss(input_tensor, y_):
         sparsity_level = 0.01
-        print("$"*15, input_tensor.shape, y_pre.shape)
+        print("$"*15, input_tensor.shape, y_pred.shape)
         hidden_layer_output=SparseAutoencoderNonLinear(n=n_bands, q=q, num_conv_layers=num_conv_layers, activation='tanh')(input_tensor)
         # y_pred = tf.keras.layers.Dot(axes=(2,1))([hidden_layer_output, input])
         
