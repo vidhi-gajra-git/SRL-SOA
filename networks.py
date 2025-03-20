@@ -26,9 +26,9 @@ def SLRol(n_bands, q):
 # # Print model summary to verify
 #   guiding_classifier.summary()
 
-  x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
-  model_name=f'Oper1D_q{q}_KSC'
-  hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
+  # x_0 = Oper1D(n_bands, 3, activation = 'tanh', q = q)(input)
+  # model_name=f'Oper1D_q{q}_KSC'
+  # hyperparams = Oper1D(n_bands, 3, activation = 'tanh', q = q).get_hyperparameters()
  
   # q = 3    # Degree of non-linearity
   num_conv_layers = 2 # Number of Conv1D layers per degree
